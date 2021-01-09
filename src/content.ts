@@ -14,8 +14,8 @@ const RED: string = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // The divs that contain possible locations for professor names to populate
-const $COURSE_LIST_AREAS: HTMLElement[] = [
-  document.getElementById('class-subject-listing')
+const $COURSE_LIST_AREAS: any[] = [
+  document.getElementById('class-subject-listing'),
 ];
 
 // @ts-ignore
@@ -52,7 +52,8 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes(): NodeListOf<Element> {
-  return document.getElementById('tooltip-iws').getAttribute('data-content');
+  let returnVal: any<Element> = document.getElementById('tooltip-iws').getAttribute('data-content');
+  return returnVal;
 }
 
 /**
@@ -112,9 +113,9 @@ function getOverallScore(profId: string): Promise<number> {
 function convertName(original: string): string {
   const regex = /\w+(, )\w+/g;
   const temp: RegExpExecArray = regex.exec(original);
-  if (temp[0].trim() in subs) {
-    temp[0] = subs[temp[0].trim()];
-  }
+//   if (temp[0].trim() in subs) {
+//     temp[0] = subs[temp[0].trim()];
+//   }
   return encodeURIComponent(temp[0]);
 }
 
