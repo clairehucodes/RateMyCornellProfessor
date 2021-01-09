@@ -1,23 +1,21 @@
 /**
- * Rate My Vandy Professors
- * JavaScript file to scrape information and replace it in Class Search
+ * Rate My Cornell Professors
+ * JavaScript file to scrape information and replace it in Class Roster
  */
 
 import { restricted } from './restricted';
 import { subs } from './subs';
 
 const BASE_URL: string = 'http://www.ratemyprofessors.com';
-const BASE_SEARCH_URL: string = 'http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Vanderbilt+University&schoolID=4002&query=';
-const GREEN: string = '#27AE60';
-const YELLOW: string = '#FF9800';
-const RED: string = '#E74C3C';
+const BASE_SEARCH_URL: string = 'http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
+const GREEN: string = '#1FB81C';
+const YELLOW: string = '#FEEB00';
+const RED: string = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
-const LOADING_INDICATOR: string = '<img src="https://webapp.mis.vanderbilt.edu/more/images/loading.gif">';
+const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // The divs that contain possible locations for professor names to populate
 const $COURSE_LIST_AREAS: HTMLElement[] = [
-  document.getElementById('tooltip-iws').getAttribute('data-content'),
-  document.getElementById('studentCart_content'),
-  document.getElementById('enrolledClassSections_content'),
+  document.getElementById('class-subject-listing'),
 ];
 
 // @ts-ignore
@@ -54,7 +52,7 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes(): NodeListOf<Element> {
-  return document.getElementsByClassName('classInstructor');
+  return document.getElementById('tooltip-iws').getAttribute('data-content');
 }
 
 /**
@@ -124,7 +122,6 @@ function convertName(original: string): string {
  * Returns a color based on <rating>. These numbers match the values on RateMyProfessors.com
  */
 function getColor(rating: number): string {
-  // TODO: search SPAN, scroll to "Alpren, Francis". The rating is 3.4 but the color is red.
   if (rating >= 3.5) {
     return GREEN;
   }
@@ -138,7 +135,7 @@ function getColor(rating: number): string {
  * Given an array of elements, groups them by professor name and returns an object
  * where the key represents the professor name and the value is an array of the nodes
  * that correspond to that professor.
- * 
+ *
  * Slight modification of https://stackoverflow.com/questions/14446511/what-is-the-most-efficient-method-to-groupby-on-a-javascript-array-of-objects
  */
 function groupProfessors(vals: NodeListOf<Element>): { [key: string]: HTMLElement[] } {
@@ -153,7 +150,7 @@ function groupProfessors(vals: NodeListOf<Element>): { [key: string]: HTMLElemen
  * courses with multiple professors return FALSE.
  */
 function isValidProfessor(name: string): boolean {
-  return (name !== '' && !name.includes('Staff') && !name.includes(' | ') && !restricted.includes(name));
+  return (name !== '' && !name.includes('Staff'));
 }
 
 /**
