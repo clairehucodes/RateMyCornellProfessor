@@ -1,0 +1,32 @@
+{
+	"manifest_version": 2,
+	"name": "Rate My Cornell Professors",
+	"short_name": "CornellRMP",
+	"description": "Puts RateMyProfessors ratings directly into Cornell Course Roster.",
+	"version": "1.0",
+	"icons": {
+		"16": "./img/icon16.png",
+		"48": "./img/icon48.png",
+		"128": "./img/icon128.png"
+	},
+	"page_action": {
+		"default_icon": {
+			"19": "./img/icon19.png",
+			"38": "./img/icon38.png"
+		}
+	},
+	"permissions": [
+		"http://www.ratemyprofessors.com/*"
+	],
+	"content_scripts": [
+		{
+			"matches": ["https://webapp.mis.vanderbilt.edu/more/SearchClasses*"],
+			"js": ["./dist/bundle.js"],
+			"all_frames": true
+		}
+	],
+	"background": {
+		"scripts": ["./dist/background.js"],
+		"persistent": false
+	}
+}
