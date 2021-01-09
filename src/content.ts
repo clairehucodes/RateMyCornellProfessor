@@ -3,8 +3,8 @@
  * JavaScript file to scrape information and replace it in Class Roster
  */
 
-import { restricted } from './restricted';
-import { subs } from './subs';
+//import { restricted } from './restricted';
+//import { subs } from './subs';
 
 const BASE_URL: string = 'http://www.ratemyprofessors.com';
 const BASE_SEARCH_URL: string = 'http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
