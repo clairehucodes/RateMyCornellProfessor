@@ -116,7 +116,7 @@ function getOverallScore(profId: string): Promise<number> {
  */
 function convertName(original: string): string {
   const regex = /\w+(, )\w+/g;
-  const temp: RegExpExecArray = regex.exec(original);
+  const temp: RegExpExecArray = regex.exec(original)!;
 //   if (temp[0].trim() in subs) {
 //     temp[0] = subs[temp[0].trim()];
 //   }
