@@ -23,16 +23,19 @@ const $COURSE_LIST_AREAS: any = [
 // chrome.runtime.sendMessage({ action: 'showIcon' });
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-let getOverallScoresObserver: MutationObserver;
-if ($COURSE_LIST_AREAS[1] != null) {
-  getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-  console.log($COURSE_LIST_AREAS);
-  $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
-}
-else{
-  console.log("$COURSE_LIST_AREAS[1] EQUALS null")
-}
+// let getOverallScoresObserver: MutationObserver;
+// if ($COURSE_LIST_AREAS[1] != null) {
+//   getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+//   console.log($COURSE_LIST_AREAS);
+//   $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
+// }
+// else{
+//   console.log("$COURSE_LIST_AREAS[1] EQUALS null")
+// }
 
+const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
+if ($COURSE_LIST_AREAS.item != null) {
+    $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 
 
 /**
