@@ -24,7 +24,7 @@ const $COURSE_LIST_AREAS: any = [
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 let getOverallScoresObserver: MutationObserver;
-if ($COURSE_LIST_AREAS.item[0] != null) {
+if ($COURSE_LIST_AREAS.item != null) {
   getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
   console.log($COURSE_LIST_AREAS);
   $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
