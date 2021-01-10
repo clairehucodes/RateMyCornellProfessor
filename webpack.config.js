@@ -1,7 +1,8 @@
 const path = require('path');
 
 module.exports = {
-    context: __dirname,
+    //context: __dirname,
+    devtool: 'eval-source-map',
     entry: {
         bundle: ['./src/content.ts'],
         background: ['./src/background.ts']
@@ -9,12 +10,12 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public'),
         filename: '[name].js',
-        publicPath: '/public/'
+        //publicPath: '/public/'
     },
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                //test: /\.ts$/,
                 exclude: '/node_modules/',
                 use: {
                     loader: 'ts-loader'
