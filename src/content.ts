@@ -19,7 +19,7 @@ const $COURSE_LIST_AREAS: any[] = [
 ];
 
 // @ts-ignore
-chrome.runtime.sendMessage({ action: 'showIcon' });
+// chrome.runtime.sendMessage({ action: 'showIcon' });
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
