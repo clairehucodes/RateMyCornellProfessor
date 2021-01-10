@@ -14,17 +14,18 @@ const YELLOW: string = '#FEEB00';
 const RED: string = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
-// The divs that contain possible locations for professor names to populate
-const $COURSE_LIST_AREAS: any = [
-  document.getElementsByClassName('class-listing'),
-];
 
 // @ts-ignore
-// chrome.runtime.sendMessage({ action: 'showIcon' });
+chrome.runtime.sendMessage({ action: 'showIcon' });
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
-getOverallScoresObserver.observe($COURSE_LIST_AREAS, { childList: true });
+let getOverallScoresObserver: MutationObserver;
+getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+console.log("here!!!: " + document.getElementsByClassName('class-listing')[0]);
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
+
+
+
 
 /**
  * Rates each of the professors currently in view.
