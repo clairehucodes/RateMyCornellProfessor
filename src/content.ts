@@ -14,34 +14,16 @@ const YELLOW: string = '#FEEB00';
 const RED: string = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
-// The divs that contain possible locations for professor names to populate
-const $COURSE_LIST_AREAS: any = [
-  document.getElementsByClassName('class-listing'),
-];
 
 // @ts-ignore
-// chrome.runtime.sendMessage({ action: 'showIcon' });
+chrome.runtime.sendMessage({ action: 'showIcon' });
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 let getOverallScoresObserver: MutationObserver;
-if ($COURSE_LIST_AREAS.length != 0) {
-  getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-  //console.log($COURSE_LIST_AREAS.length);
-  //console.log($COURSE_LIST_AREAS.HTMLCollection.item(0));
-  //console.log($COURSE_LIST_AREAS.item(0));
-  console.log(document.getElementsByClassName('class-listing')[0]);
-  console.log(document.getElementsByClassName('class-listing').item(0));
+getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+console.log("here!!!: " + document.getElementsByClassName('class-listing')[0]);
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
 
-  console.log(typeof $COURSE_LIST_AREAS)
-  //console.log($COURSE_LIST_AREAS.item());
-
-
-  getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
-}
-else{
-  console.log($COURSE_LIST_AREAS);
-  console.log("$COURSE_LIST_AREAS ISSSS null")
-}
 
 
 
