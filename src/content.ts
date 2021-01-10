@@ -52,7 +52,11 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes(): NodeListOf<Element> {
-  let returnVal: any<Element> = document.getElementById('tooltip-iws')!.getAttribute('data-content');
+  let returnVal: any
+  returnVal = document.getElementById('tooltip-iws')
+  if (returnVal != null) {
+    returnVal = returnVal.getAttribute('data-content');
+  }
   return returnVal;
 }
 
