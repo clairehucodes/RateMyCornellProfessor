@@ -21,12 +21,12 @@
 	"content_scripts": [
 		{
 			"matches": ["https://classes.cornell.edu/browse/roster/SP21*"],
-			"js": ["./dist/bundle.js"],
+			"js": ["./public/bundle.js"],
 			"all_frames": true
 		}
 	],
 	"background": {
-		"scripts": ["./dist/background.js"],
+		"scripts": ["./public/background.js"],
 		"persistent": false
 	}
 }
