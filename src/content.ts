@@ -15,7 +15,7 @@ const RED: string = '#FC4433';
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // The divs that contain possible locations for professor names to populate
 const $COURSE_LIST_AREAS: any[] = [
-  document.getElementById('class-subject-listing'),
+  document.getElementById('class-subject-listing')[0],
 ];
 
 // @ts-ignore
@@ -53,7 +53,7 @@ function rateProfessorsOnPage() {
  */
 function getProfessorNodes(): NodeListOf<Element> {
   let returnVal: any
-  returnVal = document.getElementById('tooltip-iws')
+  returnVal = document.getElementById('tooltip-iws')[0]
   if (returnVal != null) {
     returnVal = returnVal.getAttribute('data-content');
   }
