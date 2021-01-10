@@ -65,14 +65,6 @@ var $COURSE_LIST_AREAS = [
 // @ts-ignore
 // chrome.runtime.sendMessage({ action: 'showIcon' });
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-<<<<<<< HEAD
-var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-if ($COURSE_LIST_AREAS.item != null) {
-    $COURSE_LIST_AREAS.forEach(function (area) { return getOverallScoresObserver.observe(area, { childList: true }); });
-}
-else {
-    console.log('suck it');
-=======
 var getOverallScoresObserver;
 if ($COURSE_LIST_AREAS[1] != null) {
     getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
@@ -81,7 +73,6 @@ if ($COURSE_LIST_AREAS[1] != null) {
 }
 else {
     console.log("$COURSE_LIST_AREAS[1] EQUALS null");
->>>>>>> fb8ceda14fa1fec33845c84bae86f733618570a1
 }
 /**
  * Rates each of the professors currently in view.

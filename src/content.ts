@@ -16,7 +16,7 @@ const RED: string = '#FC4433';
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // The divs that contain possible locations for professor names to populate
 const $COURSE_LIST_AREAS: any = [
-  document.getElementsByClassName('class-listing'),
+  document.getElementById('class-listing'),
 ];
 
 // @ts-ignore
@@ -24,13 +24,16 @@ const $COURSE_LIST_AREAS: any = [
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 let getOverallScoresObserver: MutationObserver;
-if ($COURSE_LIST_AREAS[1] != null) {
+if ($COURSE_LIST_AREAS.item[0] != null) {
   getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
   console.log($COURSE_LIST_AREAS);
   $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 }
 else{
-  console.log("$COURSE_LIST_AREAS[1] EQUALS null")
+  // getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+  // console.log($COURSE_LIST_AREAS);
+  // $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
+  console.log("$COURSE_LIST_AREAS EQUALS null")
 }
 
 
@@ -63,7 +66,9 @@ function rateProfessorsOnPage() {
  */
 function getProfessorNodes(): NodeListOf<Element> {
   let returnVal: any
-  returnVal = document.getElementById('tooltip-iws')[0]
+  returnVal = document.getElementById('instructors').getAttribute('data-content')
+  returnVal.forEach(item => console.log(item));
+
   if (returnVal != null) {
     returnVal = returnVal.getAttribute('data-content');
   }
