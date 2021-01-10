@@ -58,35 +58,21 @@ var YELLOW = '#FEEB00';
 var RED = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
-// The divs that contain possible locations for professor names to populate
-var $COURSE_LIST_AREAS = [
-    document.getElementsByClassName('class-listing'),
-];
 // @ts-ignore
-// chrome.runtime.sendMessage({ action: 'showIcon' });
+chrome.runtime.sendMessage({ action: 'showIcon' });
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-var getOverallScoresObserver;
-if ($COURSE_LIST_AREAS.length != 0) {
-    getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-    //console.log($COURSE_LIST_AREAS.length);
-    //console.log($COURSE_LIST_AREAS.HTMLCollection.item(0));
-    //console.log($COURSE_LIST_AREAS.item(0));
-    console.log(document.getElementsByClassName('class-listing')[0]);
-    console.log(document.getElementsByClassName('class-listing').item(0));
-    console.log(typeof $COURSE_LIST_AREAS);
-    //console.log($COURSE_LIST_AREAS.item());
-    getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
-}
-else {
-    console.log($COURSE_LIST_AREAS);
-    console.log("$COURSE_LIST_AREAS ISSSS null");
-}
+var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+//console.log(document.getElementsByClassName('class-listing').item(0));
+//$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
 /**
  * Rates each of the professors currently in view.
  */
 function rateProfessorsOnPage() {
     var _this = this;
+    console.log("--");
     var professorNodes = getProfessorNodes();
+    console.log("---");
     // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
     // is assigned to each of the nodes with that professor
     var groupedProfessorNodes = groupProfessors(professorNodes);
@@ -124,6 +110,8 @@ function rateProfessorsOnPage() {
 function getProfessorNodes() {
     var returnVal;
     returnVal = document.getElementById('instructors').getAttribute('data-content');
+    console.log(returnVal);
+    console.log("hii");
     returnVal.forEach(function (item) { return console.log(item); });
     if (returnVal != null) {
         returnVal = returnVal.getAttribute('data-content');

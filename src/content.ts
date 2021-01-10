@@ -19,10 +19,32 @@ const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8
 chrome.runtime.sendMessage({ action: 'showIcon' });
 
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-let getOverallScoresObserver: MutationObserver;
-getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-console.log("here!!!: " + document.getElementsByClassName('class-listing')[0]);
-getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
+// const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
+const getOverallScoresObserver: MutationObserver = new MutationObserver(function rateProfessorsOnPage() {
+  console.log("--")
+  const professorNodes: NodeListOf<Element> = getProfessorNodes();
+  console.log("---")
+
+  // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
+  // is assigned to each of the nodes with that professor
+  const groupedProfessorNodes = groupProfessors(professorNodes);
+  Object.keys(groupedProfessorNodes).forEach(async name => {
+    try {
+      if (isValidProfessor(name) && isUnratedProfessor(name)) {
+        groupedProfessorNodes[name].forEach(setIsLoading);
+        const score = await getProfessorId(name).then(getOverallScore);
+        groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
+      } else if (isUnratedProfessor(name)) {
+        groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+      }
+    } catch (err) {
+      groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+    }
+  });
+});
+//console.log(document.getElementsByClassName('class-listing').item(0));
+//$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
 
 
 
@@ -31,7 +53,10 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
  * Rates each of the professors currently in view.
  */
 function rateProfessorsOnPage() {
+  console.log("--")
   const professorNodes: NodeListOf<Element> = getProfessorNodes();
+  console.log("---")
+
   // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
   // is assigned to each of the nodes with that professor
   const groupedProfessorNodes = groupProfessors(professorNodes);
@@ -56,6 +81,9 @@ function rateProfessorsOnPage() {
 function getProfessorNodes(): NodeListOf<Element> {
   let returnVal: any
   returnVal = document.getElementById('instructors').getAttribute('data-content')
+  console.log(returnVal)
+  console.log("hii")
+
   returnVal.forEach(item => console.log(item));
 
   if (returnVal != null) {
