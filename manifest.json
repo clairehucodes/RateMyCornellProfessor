@@ -20,8 +20,7 @@
 	],
 	"content_scripts": [
 		{
-			
-			"matches": ["https://webapp.mis.vanderbilt.edu/more/SearchClasses*"],
+			"matches": ["https://classes.cornell.edu/browse/roster/SP21/subject/*"],
 			"js": ["./public/bundle.js"],
 			"all_frames": true
 		}
