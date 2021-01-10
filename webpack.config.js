@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     //context: __dirname,
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     entry: {
         bundle: ['./src/content.ts'],
         background: ['./src/background.ts']
