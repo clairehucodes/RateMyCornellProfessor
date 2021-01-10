@@ -60,23 +60,13 @@ var RED = '#FC4433';
 var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // The divs that contain possible locations for professor names to populate
 var $COURSE_LIST_AREAS = [
-    document.getElementById('class-listing'),
+    document.getElementsByClassName('class-listing'),
 ];
 // @ts-ignore
 // chrome.runtime.sendMessage({ action: 'showIcon' });
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-var getOverallScoresObserver;
-if ($COURSE_LIST_AREAS.item != null) {
-    getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-    console.log($COURSE_LIST_AREAS);
-    $COURSE_LIST_AREAS.forEach(function (area) { return getOverallScoresObserver.observe(area, { childList: true }); });
-}
-else {
-    // getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-    // console.log($COURSE_LIST_AREAS);
-    // $COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
-    console.log("$COURSE_LIST_AREAS EQUALS null");
-}
+var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+getOverallScoresObserver.observe($COURSE_LIST_AREAS, { childList: true });
 /**
  * Rates each of the professors currently in view.
  */
