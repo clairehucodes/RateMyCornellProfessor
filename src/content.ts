@@ -36,44 +36,63 @@ setTimeout(rateProfessorsOnPage, 1000);
 setTimeout(rateProfessorsOnPage, 1000);
 
 function rateProfessorsOnPage() {
-  console.log("--")
-  const professorNodes: NodeListOf<Element> = getProfessorNodes();
-  console.log("---")
+  console.log("--rateProfessorsOnPage")
+  const professorArray: Array<string> = getProfessorNodes();
 
   // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
   // is assigned to each of the nodes with that professor
-  const groupedProfessorNodes = groupProfessors(professorNodes);
-  Object.keys(groupedProfessorNodes).forEach(async name => {
+  
+  // const groupedProfessorNodes = groupProfessors(professorNodes);
+  // Object.keys(groupedProfessorNodes).forEach(async name => {
+  //   try {
+  //     if (isValidProfessor(name) && isUnratedProfessor(name)) {
+  //       groupedProfessorNodes[name].forEach(setIsLoading);
+  //       const score = await getProfessorId(name).then(getOverallScore);
+  //       groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
+  //     } else if (isUnratedProfessor(name)) {
+  //       groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+  //     }
+  //   } catch (err) {
+  //     groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+  //   }
+  // });
+
+
+
+for (let i:number = 0; i < professorArray.length; i++) {
+let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+ async name => {
     try {
       if (isValidProfessor(name) && isUnratedProfessor(name)) {
-        groupedProfessorNodes[name].forEach(setIsLoading);
         const score = await getProfessorId(name).then(getOverallScore);
-        groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
+        setScore(name, myNode, score);
       } else if (isUnratedProfessor(name)) {
-        groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+        setInvalidScore(name, myNode);
       }
     } catch (err) {
-      groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
+      setInvalidScore(name, myNode);
     }
-  });
+  };
 }
+
+    
+
 
 /**
  * Returns an array of nodes of each search result's professor field
  */
-function getProfessorNodes(): NodeListOf<Element> {
-  let returnNodes: NodeListOf<Element>
+function getProfessorNodes(): Array<string> {
+  let returnNodes: Array<string>
+  console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    console.log("HERE")
+  
+    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).querySelector('data-content')
+    //var myEle = document.createElement("class");
+    //myEle.id = returnVal;   
 
-    let returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName('data-content').item[0]
-
-    //returnVal = returnVal.substring(0, returnVal.indexOf(":"));
-    //let htmlEl = $("<div>returnVal<div>")
-    //var elements = $(returnVal);
-    //returnNodes[i] = elements
+    let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+    returnNodes[i] = returnVal
     console.log(returnVal)
-
   }
   return returnNodes;
 }
@@ -194,8 +213,9 @@ function setInvalidScore(name: string, node: HTMLElement) {
 /**
  * Appends the loading indicator next to professor names in the results list
  */
-function setIsLoading(node: HTMLElement) {
-  node.innerHTML = node.innerHTML + ' - ' + LOADING_INDICATOR;
+function setIsLoading(name: String) {
+  //name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
+  name = name + ' - ' + LOADING_INDICATOR;
 }
 
 /**
