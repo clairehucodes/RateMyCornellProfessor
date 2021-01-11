@@ -65,7 +65,7 @@ function getProfessorNodes(): NodeListOf<Element> {
   let returnNodes: NodeListOf<Element>
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).getAttribute('data-content')
-    
+    returnVal = returnVal.substring(0, returnVal.indexOf(":"));
     returnNodes[i] = returnVal
     //console.log(returnVal)
   }
