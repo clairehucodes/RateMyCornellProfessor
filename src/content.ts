@@ -43,11 +43,14 @@ for (let i:number = 0; i < professorArray.length; i++) {
       if (isValidProfessor(name) && isUnratedProfessor(name)) {
         const score = await getProfessorId(name).then(getOverallScore);
         setScore(name, myNode, score);
+        console.log('if')
       } else if (isUnratedProfessor(name)) {
         setInvalidScore(name, myNode);
+        console.log('second')
       }
     }finally{
       setInvalidScore(name, myNode);
+      console.log('finally')
     };
   }
 }

@@ -90,15 +90,18 @@ function rateProfessorsOnPage() {
                     case 1:
                         score = _a.sent();
                         setScore(name, myNode, score);
+                        console.log('if');
                         return [3 /*break*/, 3];
                     case 2:
                         if (isUnratedProfessor(name)) {
                             setInvalidScore(name, myNode);
+                            console.log('second');
                         }
                         _a.label = 3;
                     case 3: return [3 /*break*/, 5];
                     case 4:
                         setInvalidScore(name, myNode);
+                        console.log('finally');
                         return [7 /*endfinally*/];
                     case 5:
                         ;
