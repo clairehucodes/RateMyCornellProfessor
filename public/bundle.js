@@ -107,22 +107,6 @@ function rateProfessorsOnPage() {
             });
         }); });
     };
-    // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
-    // is assigned to each of the nodes with that professor
-    // const groupedProfessorNodes = groupProfessors(professorNodes);
-    // Object.keys(groupedProfessorNodes).forEach(async name => {
-    //   try {
-    //     if (isValidProfessor(name) && isUnratedProfessor(name)) {
-    //       groupedProfessorNodes[name].forEach(setIsLoading);
-    //       const score = await getProfessorId(name).then(getOverallScore);
-    //       groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
-    //     } else if (isUnratedProfessor(name)) {
-    //       groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-    //     }
-    //   } catch (err) {
-    //     groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-    //   }
-    // });
     for (var i = 0; i < professorArray.length; i++) {
         _loop_1(i);
     }
@@ -134,12 +118,12 @@ function getProfessorNodes() {
     var returnNodes;
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).querySelector('data-content')
+        var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
+        console.log(returnVal);
         //var myEle = document.createElement("class");
         //myEle.id = returnVal;   
-        var returnVal = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws');
+        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
         returnNodes[i] = returnVal;
-        console.log(returnVal);
     }
     return returnNodes;
 }

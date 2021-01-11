@@ -37,27 +37,7 @@ setTimeout(rateProfessorsOnPage, 1000);
 
 function rateProfessorsOnPage() {
   console.log("--rateProfessorsOnPage")
-  const professorArray: Array<string> = getProfessorNodes();
-
-  // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
-  // is assigned to each of the nodes with that professor
-  
-  // const groupedProfessorNodes = groupProfessors(professorNodes);
-  // Object.keys(groupedProfessorNodes).forEach(async name => {
-  //   try {
-  //     if (isValidProfessor(name) && isUnratedProfessor(name)) {
-  //       groupedProfessorNodes[name].forEach(setIsLoading);
-  //       const score = await getProfessorId(name).then(getOverallScore);
-  //       groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
-  //     } else if (isUnratedProfessor(name)) {
-  //       groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-  //     }
-  //   } catch (err) {
-  //     groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-  //   }
-  // });
-
-
+  const professorArray: Array<string> = getProfessorNodes()
 
   for (let i:number = 0; i < professorArray.length; i++) {
   let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
@@ -75,6 +55,11 @@ function rateProfessorsOnPage() {
     };
   }
 }
+<<<<<<< HEAD
+=======
+}
+
+>>>>>>> 9137f3e7891e9c172571e67897205d219f234a02
     
 
 
@@ -86,13 +71,13 @@ function getProfessorNodes(): Array<string> {
   console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
   
-    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).querySelector('data-content')
+    let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
+    console.log(returnVal)
+
     //var myEle = document.createElement("class");
     //myEle.id = returnVal;   
-
-    let returnVal: string = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     returnNodes[i] = returnVal
-    console.log(returnVal)
   }
   return returnNodes;
 }
