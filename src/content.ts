@@ -34,7 +34,7 @@ setTimeout(rateProfessorsOnPage, 1000);
 
 function rateProfessorsOnPage() {
   console.log("--rateProfessorsOnPage")
-  const professorArray: Array<string> = getProfessorNodes()
+  const professorArray: Array<string> = getProfessorStrings()
 
 for (let i:number = 0; i < professorArray.length; i++) {
  let myNode: HTMLElement = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws')
@@ -47,30 +47,28 @@ for (let i:number = 0; i < professorArray.length; i++) {
         setInvalidScore(name, myNode);
       }
     }finally{
-      
+      setInvalidScore(name, myNode);
     };
   }
 }
 }
 
-    
-
 
 /**
- * Returns an array of nodes of each search result's professor field
+ * Returns an array of strings of each search result's professor field
  */
-function getProfessorNodes(): Array<string> {
-  let returnNodes: Array<string> = []
+function getProfessorStrings(): Array<string> {
+  let returnStrings: Array<string> = []
   console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
-    returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
+    returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
     console.log(returnVal)
-    returnNodes[i] = returnVal
+    returnStrings[i] = returnVal
 
     //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
   }
-  return returnNodes;
+  return returnStrings;
 }
 
 /**
