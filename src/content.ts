@@ -39,17 +39,14 @@ function rateProfessorsOnPage() {
   console.log("--rateProfessorsOnPage")
   const professorArray: Array<string> = getProfessorNodes()
 
-  for (let i:number = 0; i < professorArray.length; i++) {
-  let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
-  async name => { 
-      try {
-        if (isValidProfessor(name) && isUnratedProfessor(name)) {
-          const score = await getProfessorId(name).then(getOverallScore);
-          setScore(name, myNode, score);
-        } else if (isUnratedProfessor(name)) {
-          setInvalidScore(name, myNode);
-        }
-      } catch (err) {
+for (let i:number = 0; i < professorArray.length; i++) {
+ let myNode: HTMLElement = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws')
+ async name => {
+    try {
+      if (isValidProfessor(name) && isUnratedProfessor(name)) {
+        const score = await getProfessorId(name).then(getOverallScore);
+        setScore(name, myNode, score);
+      } else if (isUnratedProfessor(name)) {
         setInvalidScore(name, myNode);
       }
     };
@@ -65,14 +62,15 @@ function rateProfessorsOnPage() {
  */
 function getProfessorNodes(): Array<string> {
   let returnNodes: Array<string> = []
+  console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
+    console.log(typeof returnVal)
     console.log(returnVal)
 
-    //var myEle = document.createElement("class");
-    //myEle.id = returnVal;   
-    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     returnNodes[i] = returnVal
+
+    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
   }
   return returnNodes;
 }
