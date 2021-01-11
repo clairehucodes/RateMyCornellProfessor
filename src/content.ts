@@ -27,9 +27,6 @@ console.log(document.getElementsByClassName('class-listing').item(0));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true});
 
 //rateProfessorsOnPage;
-setTimeout(rateProfessorsOnPage, 1000);
-
-
 /**
  * Rates each of the professors currently in view.
  */
@@ -49,10 +46,12 @@ for (let i:number = 0; i < professorArray.length; i++) {
       } else if (isUnratedProfessor(name)) {
         setInvalidScore(name, myNode);
       }
+    }finally{
+      
     };
   }
 }
-
+}
 
     
 
@@ -65,9 +64,8 @@ function getProfessorNodes(): Array<string> {
   console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
-    console.log(typeof returnVal)
+    returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
     console.log(returnVal)
-
     returnNodes[i] = returnVal
 
     //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')

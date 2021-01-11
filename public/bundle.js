@@ -69,7 +69,6 @@ console.log(document.getElementsByClassName('class-listing').item(0));
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
 //rateProfessorsOnPage;
-setTimeout(rateProfessorsOnPage, 1000);
 /**
  * Rates each of the professors currently in view.
  */
@@ -81,11 +80,11 @@ function rateProfessorsOnPage() {
     var _loop_1 = function (i) {
         var myNode = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws');
         (function (name) { return __awaiter(_this, void 0, void 0, function () {
-            var score, err_1;
+            var score;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, , 4, 5]);
                         if (!(isValidProfessor(name) && isUnratedProfessor(name))) return [3 /*break*/, 2];
                         return [4 /*yield*/, getProfessorId(name).then(getOverallScore)];
                     case 1:
@@ -98,11 +97,10 @@ function rateProfessorsOnPage() {
                         }
                         _a.label = 3;
                     case 3: return [3 /*break*/, 5];
-                    case 4:
-                        err_1 = _a.sent();
-                        setInvalidScore(name, myNode);
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                    case 4: return [7 /*endfinally*/];
+                    case 5:
+                        ;
+                        return [2 /*return*/];
                 }
             });
         }); });
@@ -119,7 +117,7 @@ function getProfessorNodes() {
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
-        console.log(typeof returnVal);
+        returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);
         returnNodes[i] = returnVal;
         //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
