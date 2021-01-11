@@ -41,7 +41,7 @@ function rateProfessorsOnPage() {
 
   for (let i:number = 0; i < professorArray.length; i++) {
   let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
-  async name => {
+  async name => { 
       try {
         if (isValidProfessor(name) && isUnratedProfessor(name)) {
           const score = await getProfessorId(name).then(getOverallScore);
@@ -55,11 +55,8 @@ function rateProfessorsOnPage() {
     };
   }
 }
-<<<<<<< HEAD
-=======
-}
 
->>>>>>> 9137f3e7891e9c172571e67897205d219f234a02
+
     
 
 
@@ -67,10 +64,8 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes(): Array<string> {
-  let returnNodes: Array<string>
-  console.log(document.getElementsByClassName('instructors').length)
+  let returnNodes: Array<string> = []
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-  
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
     console.log(returnVal)
 
