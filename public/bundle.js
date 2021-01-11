@@ -76,7 +76,7 @@ function rateProfessorsOnPage() {
     console.log("--rateProfessorsOnPage");
     var professorArray = getProfessorNodes();
     var _loop_1 = function (i) {
-        var myNode = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws');
+        var myNode = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws');
         (function (name) { return __awaiter(_this, void 0, void 0, function () {
             var score, err_1;
             return __generator(this, function (_a) {
@@ -112,15 +112,14 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes() {
-    var returnNodes;
+    var returnNodes = [];
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
+        console.log(typeof returnVal);
         console.log(returnVal);
-        //var myEle = document.createElement("class");
-        //myEle.id = returnVal;   
-        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
         returnNodes[i] = returnVal;
+        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     }
     return returnNodes;
 }
