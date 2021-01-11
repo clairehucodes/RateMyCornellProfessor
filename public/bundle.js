@@ -60,6 +60,8 @@ var RED = '#FC4433';
 var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
+var area = document.getElementsByClassName('class-listing')[0];
+console.log(area);
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 // const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
@@ -114,9 +116,13 @@ function rateProfessorsOnPage() {
 function getProfessorNodes() {
     var returnNodes;
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-        var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).getAttribute('data-content');
-        returnNodes[i] = returnVal;
-        //console.log(returnVal)
+        console.log("HERE");
+        var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName('data-content').item[0];
+        //returnVal = returnVal.substring(0, returnVal.indexOf(":"));
+        //let htmlEl = $("<div>returnVal<div>")
+        //var elements = $(returnVal);
+        //returnNodes[i] = elements
+        console.log(returnVal);
     }
     return returnNodes;
 }
