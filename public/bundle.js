@@ -60,20 +60,20 @@ var RED = '#FC4433';
 var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
-var area = document.getElementsByClassName('class-listing')[0];
-console.log(area);
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-// const getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-// getOverallScoresObserver.observe(area, { childList: true, attributes: true });
-// console.log('second')
+var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+//console.log(document.getElementsByClassName('class-listing').item(0));
+//$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
 /**
  * Rates each of the professors currently in view.
  */
 setTimeout(rateProfessorsOnPage, 1000);
 function rateProfessorsOnPage() {
     var _this = this;
-    console.log('first');
+    console.log("--");
     var professorNodes = getProfessorNodes();
+    console.log("---");
     // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
     // is assigned to each of the nodes with that professor
     var groupedProfessorNodes = groupProfessors(professorNodes);
@@ -111,6 +111,8 @@ function rateProfessorsOnPage() {
 function getProfessorNodes() {
     var returnVal;
     returnVal = document.getElementById('instructors').getAttribute('data-content');
+    console.log(returnVal);
+    console.log("hii");
     returnVal.forEach(function (item) { return console.log(item); });
     if (returnVal != null) {
         returnVal = returnVal.getAttribute('data-content');
