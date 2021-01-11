@@ -82,7 +82,7 @@ function rateProfessorsOnPage() {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 4, , 5]);
-                        console.log(name + ": " + isValidProfessor(name) + ", " + isUnratedProfessor);
+                        console.log('hiiii');
                         if (!(isValidProfessor(name) && isUnratedProfessor(name))) return [3 /*break*/, 2];
                         console.log("--rateProfessorsOnPage - valid: " + i);
                         setIsLoading(myNode);
@@ -103,6 +103,7 @@ function rateProfessorsOnPage() {
                     case 4:
                         _a = _b.sent();
                         setInvalidScore(name, myNode);
+                        console.log('finally');
                         return [3 /*break*/, 5];
                     case 5:
                         ;

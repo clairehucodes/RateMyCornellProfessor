@@ -38,8 +38,7 @@ for (let i: number = 0; i < professorArray.length; i++) {
  let myNode: HTMLElement = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws')
  async name => {
     try {
-      
-      console.log(name + ": " + isValidProfessor(name) + ", " + isUnratedProfessor)
+      console.log('hiiii')      
       if (isValidProfessor(name) && isUnratedProfessor(name)) {
         console.log("--rateProfessorsOnPage - valid: " + i)
         setIsLoading(myNode);
