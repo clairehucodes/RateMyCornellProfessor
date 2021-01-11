@@ -17,20 +17,20 @@ const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8
 
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
-
+let area = document.getElementsByClassName('class-listing')[0]
+console.log(area)
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-let getOverallScoresObserver: MutationObserver;
-getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-console.log("here!!!: " + document.getElementsByClassName('class-listing')[0]);
-getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
-
-
-
+// const getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
+// getOverallScoresObserver.observe(area, { childList: true, attributes: true });
+// console.log('second')
 
 /**
  * Rates each of the professors currently in view.
  */
+setTimeout(rateProfessorsOnPage, 1000);
+
 function rateProfessorsOnPage() {
+  console.log('first')
   const professorNodes: NodeListOf<Element> = getProfessorNodes();
   // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
   // is assigned to each of the nodes with that professor
