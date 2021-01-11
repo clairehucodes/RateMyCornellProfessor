@@ -2,7 +2,11 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const method: string = request.method ? request.method.toUpperCase() : 'GET';
     const headers: Headers = new Headers();
-    if (method === 'POST') headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    if (method === 'POST') {
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+      headers.append('Access-Control-Allow-Origin', '*');
+
+    }
     const config: RequestInit = {
       method: method,
       headers: headers,
@@ -37,14 +41,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return false;
           });
         return true;
-  
+
       case 'getOverallScore':
+        console.log("here!")
         fetch(request.url, config)
           .then(res => res.text())
           .then(pageText => {
             const ratingPage: HTMLElement = document.createElement('html');
             ratingPage.innerHTML = pageText;
-            const profRatingEle: any = ratingPage.querySelector('div.grade');
+            const profRatingEle: any = ratingPage.getElementsByClassName('RatingValue__Numerator');
+            console.log(profRatingEle)
+
             let profRating: HTMLElement;
             if (profRatingEle != null) {
               profRating = profRatingEle.textContent
