@@ -31,7 +31,7 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 1000);
 
 function rateProfessorsOnPage() {
-let professorArray: Array<string> = getProfessorNodes()
+  const professorArray: Array<string> = getProfessorStrings()
 
 for (let i: number = 0; i < professorArray.length; i++) {
  let name: string = professorArray[i]
@@ -43,37 +43,37 @@ for (let i: number = 0; i < professorArray.length; i++) {
       if (isValidProfessor(name) && isUnratedProfessor(name)) {
         console.log("--rateProfessorsOnPage - valid: " + i)
         setIsLoading(myNode);
+
         const score = await getProfessorId(name).then(getOverallScore);
-  
         setScore(name, myNode, score);
       } else if (isUnratedProfessor(name)) {
         console.log("--rateProfessorsOnPage - unrated: " + i)
         setInvalidScore(name, myNode);
       }
 
-    }catch{
-      console.log("--rateProfessorsOnPage - finally: " + i)
+    } catch {
+      setInvalidScore(name, myNode);
     };
   }
 }
 }
 
-    
-
 
 /**
- * Returns an array of nodes of each search result's professor field
+ * Returns an array of strings of each search result's professor field
  */
-function getProfessorNodes(): Array<string> {
-  let returnNodes: Array<string> = []
+function getProfessorStrings(): Array<string> {
+  let returnStrings: Array<string> = []
+  console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
-    returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-    returnNodes[i] = returnVal
+    returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
+    console.log(returnVal)
+    returnStrings[i] = returnVal
 
     //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
   }
-  return returnNodes;
+  return returnStrings;
 }
 
 /**

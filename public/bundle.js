@@ -72,7 +72,7 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 1000);
 function rateProfessorsOnPage() {
     var _this = this;
-    var professorArray = getProfessorNodes();
+    var professorArray = getProfessorStrings();
     var _loop_1 = function (i) {
         var name_1 = professorArray[i];
         var myNode = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws');
@@ -100,7 +100,7 @@ function rateProfessorsOnPage() {
                     case 3: return [3 /*break*/, 5];
                     case 4:
                         _a = _b.sent();
-                        console.log("--rateProfessorsOnPage - finally: " + i);
+                        setInvalidScore(name, myNode);
                         return [3 /*break*/, 5];
                     case 5:
                         ;
@@ -114,17 +114,19 @@ function rateProfessorsOnPage() {
     }
 }
 /**
- * Returns an array of nodes of each search result's professor field
+ * Returns an array of strings of each search result's professor field
  */
-function getProfessorNodes() {
-    var returnNodes = [];
+function getProfessorStrings() {
+    var returnStrings = [];
+    console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-        returnNodes[i] = returnVal;
+        console.log(returnVal);
+        returnStrings[i] = returnVal;
         //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     }
-    return returnNodes;
+    return returnStrings;
 }
 /**
  * Gets the part of the URL that needs to be appended to the base URL to reach the professor's page
