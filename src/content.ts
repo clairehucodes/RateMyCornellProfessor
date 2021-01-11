@@ -18,11 +18,9 @@ const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
 let area = document.getElementsByClassName('class-listing')[0]
-console.log(area)
+
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-// const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
 const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
-console.log(document.getElementsByClassName('class-listing').item(0));
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true});
 
@@ -33,21 +31,28 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 1000);
 
 function rateProfessorsOnPage() {
-  console.log("--rateProfessorsOnPage")
-  const professorArray: Array<string> = getProfessorNodes()
+let professorArray: Array<string> = getProfessorNodes()
 
-for (let i:number = 0; i < professorArray.length; i++) {
+for (let i: number = 0; i < professorArray.length; i++) {
+ let name: string = professorArray[i]
  let myNode: HTMLElement = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws')
  async name => {
     try {
+      
+      console.log(name + ": " + isValidProfessor(name) + ", " + isUnratedProfessor)
       if (isValidProfessor(name) && isUnratedProfessor(name)) {
+        console.log("--rateProfessorsOnPage - valid: " + i)
+        setIsLoading(myNode);
         const score = await getProfessorId(name).then(getOverallScore);
+  
         setScore(name, myNode, score);
       } else if (isUnratedProfessor(name)) {
+        console.log("--rateProfessorsOnPage - unrated: " + i)
         setInvalidScore(name, myNode);
       }
-    }finally{
-      
+
+    }catch{
+      console.log("--rateProfessorsOnPage - finally: " + i)
     };
   }
 }
@@ -61,11 +66,9 @@ for (let i:number = 0; i < professorArray.length; i++) {
  */
 function getProfessorNodes(): Array<string> {
   let returnNodes: Array<string> = []
-  console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
     returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-    console.log(returnVal)
     returnNodes[i] = returnVal
 
     //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
@@ -189,9 +192,9 @@ function setInvalidScore(name: string, node: HTMLElement) {
 /**
  * Appends the loading indicator next to professor names in the results list
  */
-function setIsLoading(name: String) {
-  //name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
-  name = name + ' - ' + LOADING_INDICATOR;
+function setIsLoading(name: HTMLElement) {
+  name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
+  //name = name + ' - ' + LOADING_INDICATOR;
 }
 
 /**
