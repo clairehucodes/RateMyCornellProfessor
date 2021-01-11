@@ -61,11 +61,8 @@ var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
 var area = document.getElementsByClassName('class-listing')[0];
-console.log(area);
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
-// const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-console.log(document.getElementsByClassName('class-listing').item(0));
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
 //rateProfessorsOnPage;
@@ -75,34 +72,38 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 1000);
 function rateProfessorsOnPage() {
     var _this = this;
-    console.log("--rateProfessorsOnPage");
     var professorArray = getProfessorStrings();
     var _loop_1 = function (i) {
+        var name_1 = professorArray[i];
         var myNode = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws');
         (function (name) { return __awaiter(_this, void 0, void 0, function () {
-            var score;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var score, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, , 4, 5]);
+                        _b.trys.push([0, 4, , 5]);
+                        console.log(name + ": " + isValidProfessor(name) + ", " + isUnratedProfessor);
                         if (!(isValidProfessor(name) && isUnratedProfessor(name))) return [3 /*break*/, 2];
+                        console.log("--rateProfessorsOnPage - valid: " + i);
+                        setIsLoading(myNode);
                         return [4 /*yield*/, getProfessorId(name).then(getOverallScore)];
                     case 1:
-                        score = _a.sent();
+                        score = _b.sent();
                         setScore(name, myNode, score);
                         console.log('if');
                         return [3 /*break*/, 3];
                     case 2:
                         if (isUnratedProfessor(name)) {
+                            console.log("--rateProfessorsOnPage - unrated: " + i);
                             setInvalidScore(name, myNode);
                             console.log('second');
                         }
-                        _a.label = 3;
+                        _b.label = 3;
                     case 3: return [3 /*break*/, 5];
                     case 4:
+                        _a = _b.sent();
                         setInvalidScore(name, myNode);
-                        console.log('finally');
-                        return [7 /*endfinally*/];
+                        return [3 /*break*/, 5];
                     case 5:
                         ;
                         return [2 /*return*/];
@@ -239,8 +240,8 @@ function setInvalidScore(name, node) {
  * Appends the loading indicator next to professor names in the results list
  */
 function setIsLoading(name) {
-    //name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
-    name = name + ' - ' + LOADING_INDICATOR;
+    name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
+    //name = name + ' - ' + LOADING_INDICATOR;
 }
 /**
  * Adds the score and changes the color of the professor on the search page
