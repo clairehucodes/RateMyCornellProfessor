@@ -61,10 +61,13 @@ var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
+// const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
-//console.log(document.getElementsByClassName('class-listing').item(0));
+console.log(document.getElementsByClassName('class-listing').item(0));
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
-getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true });
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
+//rateProfessorsOnPage;
+setTimeout(rateProfessorsOnPage, 1000);
 /**
  * Rates each of the professors currently in view.
  */
@@ -109,15 +112,13 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes() {
-    var returnVal;
-    returnVal = document.getElementById('instructors').getAttribute('data-content');
-    console.log(returnVal);
-    console.log("hii");
-    returnVal.forEach(function (item) { return console.log(item); });
-    if (returnVal != null) {
-        returnVal = returnVal.getAttribute('data-content');
+    var returnNodes;
+    for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
+        var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).getAttribute('data-content');
+        returnNodes[i] = returnVal;
+        //console.log(returnVal)
     }
-    return returnVal;
+    return returnNodes;
 }
 /**
  * Gets the part of the URL that needs to be appended to the base URL to reach the professor's page

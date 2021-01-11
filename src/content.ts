@@ -21,33 +21,13 @@ let area = document.getElementsByClassName('class-listing')[0]
 console.log(area)
 // Watch each of the areas where professor names may appear for changes. When detected, rate each professor.
 // const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
-const getOverallScoresObserver: MutationObserver = new MutationObserver(function rateProfessorsOnPage() {
-  console.log("--")
-  const professorNodes: NodeListOf<Element> = getProfessorNodes();
-  console.log("---")
-
-  // Group nodes by professor name. This way, only one API call needs to be made per professor, then that score
-  // is assigned to each of the nodes with that professor
-  const groupedProfessorNodes = groupProfessors(professorNodes);
-  Object.keys(groupedProfessorNodes).forEach(async name => {
-    try {
-      if (isValidProfessor(name) && isUnratedProfessor(name)) {
-        groupedProfessorNodes[name].forEach(setIsLoading);
-        const score = await getProfessorId(name).then(getOverallScore);
-        groupedProfessorNodes[name].forEach(node => setScore(name, node, score));
-      } else if (isUnratedProfessor(name)) {
-        groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-      }
-    } catch (err) {
-      groupedProfessorNodes[name].forEach(node => setInvalidScore(name, node));
-    }
-  });
-});
-//console.log(document.getElementsByClassName('class-listing').item(0));
+const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
+console.log(document.getElementsByClassName('class-listing').item(0));
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
-getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
+getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true});
 
-
+//rateProfessorsOnPage;
+setTimeout(rateProfessorsOnPage, 1000);
 
 
 /**
@@ -82,17 +62,14 @@ function rateProfessorsOnPage() {
  * Returns an array of nodes of each search result's professor field
  */
 function getProfessorNodes(): NodeListOf<Element> {
-  let returnVal: any
-  returnVal = document.getElementById('instructors').getAttribute('data-content')
-  console.log(returnVal)
-  console.log("hii")
-
-  returnVal.forEach(item => console.log(item));
-
-  if (returnVal != null) {
-    returnVal = returnVal.getAttribute('data-content');
+  let returnNodes: NodeListOf<Element>
+  for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
+    let returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).getAttribute('data-content')
+    
+    returnNodes[i] = returnVal
+    //console.log(returnVal)
   }
-  return returnVal;
+  return returnNodes;
 }
 
 /**
