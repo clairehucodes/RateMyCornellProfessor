@@ -33,32 +33,38 @@ setTimeout(rateProfessorsOnPage, 1000);
 function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings()
 
-for (let i: number = 0; i < professorArray.length; i++) {
- let name: string = professorArray[i]
- let myNode: HTMLElement = document.getElementsByClassName('instructors').item(0).querySelector('tooltip-iws')
- async name => {
-    try {
-      console.log('hiiii')      
-      if (isValidProfessor(name) && isUnratedProfessor(name)) {
-        console.log("--rateProfessorsOnPage - valid: " + i)
-        setIsLoading(myNode);
+  for (let i: number = 0; i < professorArray.length; i++) {
+    let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0)
+    //let myNode: Element = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+    let myName: string = professorArray[i]
+    // @ts-ignore
+    myDriver(myName, myNode);
+  }
 
-        const score = await getProfessorId(name).then(getOverallScore);
-        setScore(name, myNode, score);
-        console.log('if')
-      } else if (isUnratedProfessor(name)) {
-        console.log("--rateProfessorsOnPage - unrated: " + i)
-        setInvalidScore(name, myNode);
-        console.log('second')
+}
+
+async function myDriver(myName: string, myNode: HTMLElement) {
+    try {
+      console.log(myName + ": " + isValidProfessor(myName) + ", " + isUnratedProfessor(myName))
+
+      if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
+        setIsLoading(myNode);
+        const score = await getProfessorId(myName).then(getOverallScore);
+        console.log("SCORE"+ score)
+        setScore(myName, myNode, score);
+      } else if (isUnratedProfessor(myName)) {
+        console.log("--rateProfessorsOnPage - unrated: " + myName)
+        setInvalidScore(myName, myNode);
       }
 
     } catch {
-      setInvalidScore(name, myNode);
-      console.log('finally')
+      setInvalidScore(myName, myNode);
+      console.log("--rateProfessorsOnPage - catch: " + myName)
     };
+
+    console.log("--AFTER async")
+
   }
-}
-}
 
 
 /**
@@ -83,6 +89,7 @@ function getProfessorStrings(): Array<string> {
  * Example return: '/ShowRatings.jsp?tid=2301025'
  */
 function getProfessorId(profName: string): Promise<string> {
+
   const config = {
     action: 'searchForProfessor',
     method: 'POST',
@@ -90,11 +97,15 @@ function getProfessorId(profName: string): Promise<string> {
   };
 
   return new Promise((resolve, reject) => {
+
     // @ts-ignore
     chrome.runtime.sendMessage(config, res => {
+      console.log("IN3!!")
       if (res.profId) {
+        console.log("getProfessorId worked!!" + res.profId)
         resolve(res.profId);
       } else {
+        console.log("getProfessorId DID NOT work!!")
         reject('Search result not found');
       }
     });
@@ -105,6 +116,7 @@ function getProfessorId(profName: string): Promise<string> {
  * Scrapes the RMP page for the professor at <profId> for their overall score and returns it
  */
 function getOverallScore(profId: string): Promise<number> {
+
   const config = {
     action: 'getOverallScore',
     method: 'POST',
@@ -114,13 +126,22 @@ function getOverallScore(profId: string): Promise<number> {
   return new Promise((resolve, reject) => {
     // @ts-ignore
     chrome.runtime.sendMessage(config, res => {
-      if (res.profRating) {
-        if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
-          reject('Professor not rated');
+      if (res) {
+        if (res.profRating) {
+          if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
+            console.log('------Professor not rated');
+            reject('Professor not rated');
+          } else {
+            console.log('----------' + parseFloat(res.profRating))
+            resolve(parseFloat(res.profRating));
+          }
         } else {
-          resolve(parseFloat(res.profRating));
+          console.log('--------No rating found');
+          reject('No rating found');
         }
-      } else {
+      }
+      else{
+        console.log('--------No rating found!!!! :(((');
         reject('No rating found');
       }
     });
@@ -133,12 +154,18 @@ function getOverallScore(profId: string): Promise<number> {
  * a search.
  */
 function convertName(original: string): string {
-  const regex = /\w+(, )\w+/g;
-  const temp: RegExpExecArray = regex.exec(original)!;
-//   if (temp[0].trim() in subs) {
-//     temp[0] = subs[temp[0].trim()];
-//   }
-  return encodeURIComponent(temp[0]);
+  let nameArr = original.split(" ");
+  let nameURL = nameArr[0] + "+"+ nameArr[1]
+  console.log("CONVERT NAME: " + nameURL)
+
+  return nameURL
+//   const regex = /\w+( )\w+/g;
+//   const temp: RegExpExecArray = regex.exec(original)!;
+// //   if (temp[0].trim() in subs) {
+// //     temp[0] = subs[temp[0].trim()];
+// //   }
+//   console.log("CONVERT NAME - O" + encodeURIComponent(temp[0]))
+// return encodeURIComponent(original);
 }
 
 /**
@@ -207,7 +234,8 @@ function setScore(name: string, node: HTMLElement, score?: number) {
     node.textContent = name + ' - ' + score.toFixed(1);
     node.style.color = getColor(score);
   } else {
-    node.textContent = name + ' - N/A';
+    console.log ("ERROR:::::  " + name)
+    node.innerHTML = name + ' - N/A';
   }
 }
 

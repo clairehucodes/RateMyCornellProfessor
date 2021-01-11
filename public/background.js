@@ -8,8 +8,10 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var method = request.method ? request.method.toUpperCase() : 'GET';
     var headers = new Headers();
-    if (method === 'POST')
+    if (method === 'POST') {
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('Access-Control-Allow-Origin', '*');
+    }
     var config = {
         method: method,
         headers: headers,
@@ -43,12 +45,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             });
             return true;
         case 'getOverallScore':
+            console.log("here!");
             fetch(request.url, config)
                 .then(function (res) { return res.text(); })
                 .then(function (pageText) {
                 var ratingPage = document.createElement('html');
                 ratingPage.innerHTML = pageText;
-                var profRatingEle = ratingPage.querySelector('div.grade');
+                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator');
+                console.log(profRatingEle);
                 var profRating;
                 if (profRatingEle != null) {
                     profRating = profRatingEle.textContent;
