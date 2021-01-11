@@ -126,146 +126,146 @@ function rateProfessorsOnPage() {
     for (var i = 0; i < professorArray.length; i++) {
         _loop_1(i);
     }
-    /**
-     * Returns an array of nodes of each search result's professor field
-     */
-    function getProfessorNodes() {
-        var returnNodes;
-        console.log(document.getElementsByClassName('instructors').length);
-        for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-            //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).querySelector('data-content')
-            //var myEle = document.createElement("class");
-            //myEle.id = returnVal;   
-            var returnVal = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws');
-            returnNodes[i] = returnVal;
-            console.log(returnVal);
-        }
-        return returnNodes;
+}
+/**
+ * Returns an array of nodes of each search result's professor field
+ */
+function getProfessorNodes() {
+    var returnNodes;
+    console.log(document.getElementsByClassName('instructors').length);
+    for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
+        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(i).querySelector('data-content')
+        //var myEle = document.createElement("class");
+        //myEle.id = returnVal;   
+        var returnVal = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws');
+        returnNodes[i] = returnVal;
+        console.log(returnVal);
     }
-    /**
-     * Gets the part of the URL that needs to be appended to the base URL to reach the professor's page
-     * Example return: '/ShowRatings.jsp?tid=2301025'
-     */
-    function getProfessorId(profName) {
-        var config = {
-            action: 'searchForProfessor',
-            method: 'POST',
-            url: BASE_SEARCH_URL + convertName(profName)
-        };
-        return new Promise(function (resolve, reject) {
-            // @ts-ignore
-            chrome.runtime.sendMessage(config, function (res) {
-                if (res.profId) {
-                    resolve(res.profId);
+    return returnNodes;
+}
+/**
+ * Gets the part of the URL that needs to be appended to the base URL to reach the professor's page
+ * Example return: '/ShowRatings.jsp?tid=2301025'
+ */
+function getProfessorId(profName) {
+    var config = {
+        action: 'searchForProfessor',
+        method: 'POST',
+        url: BASE_SEARCH_URL + convertName(profName)
+    };
+    return new Promise(function (resolve, reject) {
+        // @ts-ignore
+        chrome.runtime.sendMessage(config, function (res) {
+            if (res.profId) {
+                resolve(res.profId);
+            }
+            else {
+                reject('Search result not found');
+            }
+        });
+    });
+}
+/**
+ * Scrapes the RMP page for the professor at <profId> for their overall score and returns it
+ */
+function getOverallScore(profId) {
+    var config = {
+        action: 'getOverallScore',
+        method: 'POST',
+        url: BASE_URL + profId,
+    };
+    return new Promise(function (resolve, reject) {
+        // @ts-ignore
+        chrome.runtime.sendMessage(config, function (res) {
+            if (res.profRating) {
+                if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
+                    reject('Professor not rated');
                 }
                 else {
-                    reject('Search result not found');
+                    resolve(parseFloat(res.profRating));
                 }
-            });
+            }
+            else {
+                reject('No rating found');
+            }
         });
+    });
+}
+/**
+ * Converts a name from it's notation as shown in the search results to a form
+ * that can be appended to the base RateMyProfessors URL in order to emulate
+ * a search.
+ */
+function convertName(original) {
+    var regex = /\w+(, )\w+/g;
+    var temp = regex.exec(original);
+    //   if (temp[0].trim() in subs) {
+    //     temp[0] = subs[temp[0].trim()];
+    //   }
+    return encodeURIComponent(temp[0]);
+}
+/**
+ * Returns a color based on <rating>. These numbers match the values on RateMyProfessors.com
+ */
+function getColor(rating) {
+    if (rating >= 3.5) {
+        return GREEN;
     }
-    /**
-     * Scrapes the RMP page for the professor at <profId> for their overall score and returns it
-     */
-    function getOverallScore(profId) {
-        var config = {
-            action: 'getOverallScore',
-            method: 'POST',
-            url: BASE_URL + profId,
-        };
-        return new Promise(function (resolve, reject) {
-            // @ts-ignore
-            chrome.runtime.sendMessage(config, function (res) {
-                if (res.profRating) {
-                    if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
-                        reject('Professor not rated');
-                    }
-                    else {
-                        resolve(parseFloat(res.profRating));
-                    }
-                }
-                else {
-                    reject('No rating found');
-                }
-            });
-        });
+    if (rating < 2.5) {
+        return RED;
     }
-    /**
-     * Converts a name from it's notation as shown in the search results to a form
-     * that can be appended to the base RateMyProfessors URL in order to emulate
-     * a search.
-     */
-    function convertName(original) {
-        var regex = /\w+(, )\w+/g;
-        var temp = regex.exec(original);
-        //   if (temp[0].trim() in subs) {
-        //     temp[0] = subs[temp[0].trim()];
-        //   }
-        return encodeURIComponent(temp[0]);
+    return YELLOW;
+}
+/**
+ * Given an array of elements, groups them by professor name and returns an object
+ * where the key represents the professor name and the value is an array of the nodes
+ * that correspond to that professor.
+ *
+ * Slight modification of https://stackoverflow.com/questions/14446511/what-is-the-most-efficient-method-to-groupby-on-a-javascript-array-of-objects
+ */
+function groupProfessors(vals) {
+    return Array.from(vals).reduce(function (ret, val) {
+        (ret[val.textContent.trim()] = ret[val.textContent.trim()] || []).push(val);
+        return ret;
+    }, {});
+}
+/**
+ * Returns TRUE if the professor is a single, non-Staff professor. Staff professors and
+ * courses with multiple professors return FALSE.
+ */
+function isValidProfessor(name) {
+    return (name !== '' && !name.includes('Staff'));
+}
+/**
+ * Return TRUE if the professor is not already rated or is in the process of being rated.
+ * FALSE otherwise.
+ */
+function isUnratedProfessor(name) {
+    return !name.includes(' - ');
+}
+/**
+ * Adds 'N/A' as the score to professor on the search page
+ */
+function setInvalidScore(name, node) {
+    setScore(name, node);
+}
+/**
+ * Appends the loading indicator next to professor names in the results list
+ */
+function setIsLoading(name) {
+    //name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
+    name = name + ' - ' + LOADING_INDICATOR;
+}
+/**
+ * Adds the score and changes the color of the professor on the search page
+ */
+function setScore(name, node, score) {
+    if (score) {
+        node.textContent = name + ' - ' + score.toFixed(1);
+        node.style.color = getColor(score);
     }
-    /**
-     * Returns a color based on <rating>. These numbers match the values on RateMyProfessors.com
-     */
-    function getColor(rating) {
-        if (rating >= 3.5) {
-            return GREEN;
-        }
-        if (rating < 2.5) {
-            return RED;
-        }
-        return YELLOW;
-    }
-    /**
-     * Given an array of elements, groups them by professor name and returns an object
-     * where the key represents the professor name and the value is an array of the nodes
-     * that correspond to that professor.
-     *
-     * Slight modification of https://stackoverflow.com/questions/14446511/what-is-the-most-efficient-method-to-groupby-on-a-javascript-array-of-objects
-     */
-    function groupProfessors(vals) {
-        return Array.from(vals).reduce(function (ret, val) {
-            (ret[val.textContent.trim()] = ret[val.textContent.trim()] || []).push(val);
-            return ret;
-        }, {});
-    }
-    /**
-     * Returns TRUE if the professor is a single, non-Staff professor. Staff professors and
-     * courses with multiple professors return FALSE.
-     */
-    function isValidProfessor(name) {
-        return (name !== '' && !name.includes('Staff'));
-    }
-    /**
-     * Return TRUE if the professor is not already rated or is in the process of being rated.
-     * FALSE otherwise.
-     */
-    function isUnratedProfessor(name) {
-        return !name.includes(' - ');
-    }
-    /**
-     * Adds 'N/A' as the score to professor on the search page
-     */
-    function setInvalidScore(name, node) {
-        setScore(name, node);
-    }
-    /**
-     * Appends the loading indicator next to professor names in the results list
-     */
-    function setIsLoading(name) {
-        //name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
-        name = name + ' - ' + LOADING_INDICATOR;
-    }
-    /**
-     * Adds the score and changes the color of the professor on the search page
-     */
-    function setScore(name, node, score) {
-        if (score) {
-            node.textContent = name + ' - ' + score.toFixed(1);
-            node.style.color = getColor(score);
-        }
-        else {
-            node.textContent = name + ' - N/A';
-        }
+    else {
+        node.textContent = name + ' - N/A';
     }
 }
 

@@ -59,22 +59,22 @@ function rateProfessorsOnPage() {
 
 
 
-for (let i:number = 0; i < professorArray.length; i++) {
-let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
- async name => {
-    try {
-      if (isValidProfessor(name) && isUnratedProfessor(name)) {
-        const score = await getProfessorId(name).then(getOverallScore);
-        setScore(name, myNode, score);
-      } else if (isUnratedProfessor(name)) {
+  for (let i:number = 0; i < professorArray.length; i++) {
+  let myNode: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+  async name => {
+      try {
+        if (isValidProfessor(name) && isUnratedProfessor(name)) {
+          const score = await getProfessorId(name).then(getOverallScore);
+          setScore(name, myNode, score);
+        } else if (isUnratedProfessor(name)) {
+          setInvalidScore(name, myNode);
+        }
+      } catch (err) {
         setInvalidScore(name, myNode);
       }
-    } catch (err) {
-      setInvalidScore(name, myNode);
-    }
-  };
+    };
+  }
 }
-
     
 
 
@@ -90,7 +90,7 @@ function getProfessorNodes(): Array<string> {
     //var myEle = document.createElement("class");
     //myEle.id = returnVal;   
 
-    let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+    let returnVal: string = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     returnNodes[i] = returnVal
     console.log(returnVal)
   }
@@ -229,3 +229,4 @@ function setScore(name: string, node: HTMLElement, score?: number) {
     node.textContent = name + ' - N/A';
   }
 }
+
