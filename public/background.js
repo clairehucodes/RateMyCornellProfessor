@@ -54,6 +54,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 var ratingPage = document.createElement('html');
                 ratingPage.innerHTML = pageText;
                 console.log('"@@@@@@@@@@@@"');
+                
                 var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
                 //var profRatingEle = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
                 //var profRatingEle2 = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').item(0);
