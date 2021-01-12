@@ -51,8 +51,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 //import { restricted } from './restricted';
 //import { subs } from './subs';
-var BASE_URL = 'http://www.ratemyprofessors.com';
-var BASE_SEARCH_URL = 'http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
+var proxyurl = "https://cors-anywhere.herokuapp.com/";
+var BASE_URL = proxyurl + 'https://www.ratemyprofessors.com';
+var BASE_SEARCH_URL = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 var GREEN = '#1FB81C';
 var YELLOW = '#FEEB00';
 var RED = '#FC4433';
@@ -69,7 +70,7 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 1000);
+setTimeout(rateProfessorsOnPage, 500);
 function rateProfessorsOnPage() {
     var professorArray = getProfessorStrings();
     for (var i = 0; i < professorArray.length; i++) {

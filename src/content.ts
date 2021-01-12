@@ -6,9 +6,9 @@
 //import { restricted } from './restricted';
 //import { subs } from './subs';
 
-
-const BASE_URL: string = 'http://www.ratemyprofessors.com';
-const BASE_SEARCH_URL: string = 'http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
+const proxyurl = "https://cors-anywhere.herokuapp.com/";
+const BASE_URL: string = proxyurl + 'https://www.ratemyprofessors.com';
+const BASE_SEARCH_URL: string =  'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 const GREEN: string = '#1FB81C';
 const YELLOW: string = '#FEEB00';
 const RED: string = '#FC4433';
@@ -28,7 +28,7 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 1000);
+setTimeout(rateProfessorsOnPage, 500);
 
 function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings()
