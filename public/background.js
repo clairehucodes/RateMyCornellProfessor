@@ -44,33 +44,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 return false;
             });
             return true;
-
         case 'getOverallScore':
-            //fetch(request.url, config)
-            fetch(request.url)
+            fetch(request.url, config)
                 .then(function (res) { return res.text(); })
                 .then(function (pageText) {
-            
+                console.log('"@@@@@@@@@@@@"');
+                console.log(pageText);
                 var ratingPage = document.createElement('html');
                 ratingPage.innerHTML = pageText;
-                console.log('"@@@@@@@@@@@@"');
-                
-                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
-                //var profRatingEle = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
-                //var profRatingEle2 = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').item(0);
-                //var profRatingEle3 = ratingPage.querySelector('.RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').innerHTML;
-
-                console.log('++++++++')
-                console.log('1: ' + profRatingEle);
-                //console.log('2: ' + profRatingEle2)
-                //console.log('3: ' + profRatingEle3)
-
+                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator');
+                console.log('++++++++');
+                console.log(profRatingEle);
                 var profRating;
                 if (profRatingEle != null) {
                     console.log('^^^^^^^^^^');
-                    console.log('2: ' + profRatingEle.textContent);
-                   // console.log('3: ' + profRatingEle.innerHTML)
-                    
+                    console.log(profRatingEle);
                     profRating = profRatingEle.textContent;
                     sendResponse({ profRating: profRating });
                 }
