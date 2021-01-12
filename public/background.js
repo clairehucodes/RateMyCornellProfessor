@@ -22,9 +22,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             chrome.pageAction.show(sender.tab.id);
             return true;
         case 'searchForProfessor':
+            console.log('thats so fetch!');
             fetch(request.url, config)
                 .then(function (res) { return res.text(); })
                 .then(function (pageText) {
+                console.log('<<<< fetch happened');
                 var searchPage = document.createElement('html');
                 searchPage.innerHTML = pageText;
                 // const profId: HTMLElement = searchPage.querySelector('.listing.PROFESSOR');
@@ -42,24 +44,44 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 return false;
             });
             return true;
+
         case 'getOverallScore':
-            fetch(request.url, config)
+            //fetch(request.url, config)
+            fetch(request.url)
                 .then(function (res) { return res.text(); })
                 .then(function (pageText) {
+            
                 var ratingPage = document.createElement('html');
                 ratingPage.innerHTML = pageText;
-                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator');
+                console.log('"@@@@@@@@@@@@"');
+                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
+                //var profRatingEle = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
+                //var profRatingEle2 = ratingPage.getElementsByClassName('RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').item(0);
+                //var profRatingEle3 = ratingPage.querySelector('.RatingValue__AvgRatingWrapper-qw8sqy-3 bIUJtl').innerHTML;
+
+                console.log('++++++++')
+                console.log('1: ' + profRatingEle);
+                //console.log('2: ' + profRatingEle2)
+                //console.log('3: ' + profRatingEle3)
+
                 var profRating;
                 if (profRatingEle != null) {
+                    console.log('^^^^^^^^^^');
+                    console.log('2: ' + profRatingEle.textContent);
+                   // console.log('3: ' + profRatingEle.innerHTML)
+                    
                     profRating = profRatingEle.textContent;
                     sendResponse({ profRating: profRating });
                 }
                 else {
+                    console.log('%%%%%%%%%%');
+                    console.log(profRatingEle);
                     console.debug('[ERROR: ratingPage.querySelector(div.grade) is null]');
                     sendResponse();
                 }
             })
                 .catch(function (err) {
+                console.log('caught!!!!');
                 console.debug('[ERROR: getOverallScore]');
                 console.debug(err);
                 sendResponse();
