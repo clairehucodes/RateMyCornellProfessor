@@ -124,7 +124,10 @@ function getProfessorStrings() {
     var returnStrings = [];
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-        var returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
+        var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
+        console.log("##############");
+        console.log(returnValHTML);
+        var returnVal = returnValHTML.getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);
         returnStrings[i] = returnVal;

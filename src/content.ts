@@ -34,7 +34,7 @@ function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings()
 
   for (let i: number = 0; i < professorArray.length; i++) {
-    let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0)
+    let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
     //let myNode: Element = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
     let myName: string = professorArray[i]
     // @ts-ignore
@@ -74,7 +74,10 @@ function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
   console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    let returnVal: string = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content')
+    let returnValHTML: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
+    console.log ("##############");
+    console.log (returnValHTML);
+    let returnVal = returnValHTML.getAttribute('data-content');
     returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
     console.log(returnVal)
     returnStrings[i] = returnVal

@@ -17,9 +17,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
   
       case 'searchForProfessor':
+        console.log('thats so fetch!')
         fetch(request.url, config)
-          .then(res => res.text())
+          .then(res => res.text()) 
           .then(pageText => {
+            console.log('<<<< fetch happened')
             const searchPage: HTMLElement = document.createElement('html');
             searchPage.innerHTML = pageText;
             // const profId: HTMLElement = searchPage.querySelector('.listing.PROFESSOR');
@@ -30,6 +32,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.debug(ret);
             sendResponse({ profId: ret });
           })
+
           .catch(err => {
             console.debug('[ERROR: searchForProfessor]');
             console.debug(err);
@@ -42,21 +45,29 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         fetch(request.url, config)
           .then(res => res.text())
           .then(pageText => {
+            console.log('"@@@@@@@@@@@@"')
+            console.log(pageText)
             const ratingPage: HTMLElement = document.createElement('html');
             ratingPage.innerHTML = pageText;
             const profRatingEle: any = ratingPage.getElementsByClassName('RatingValue__Numerator');
-            
+            console.log('++++++++')
+            console.log(profRatingEle)
             let profRating: HTMLElement;
             if (profRatingEle != null) {
+              console.log('^^^^^^^^^^')
+              console.log(profRatingEle)
               profRating = profRatingEle.textContent
               sendResponse({ profRating });
             }
             else {
+              console.log('%%%%%%%%%%')
+              console.log(profRatingEle)
               console.debug('[ERROR: ratingPage.querySelector(div.grade) is null]');
               sendResponse();
             }
           })
           .catch(err => {
+            console.log('caught!!!!')
             console.debug('[ERROR: getOverallScore]');
             console.debug(err);
             sendResponse();
