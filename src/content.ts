@@ -8,7 +8,7 @@
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const BASE_URL: string = proxyurl + 'https://www.ratemyprofessors.com';
-const BASE_SEARCH_URL: string =  'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
+const BASE_SEARCH_URL: string = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 const GREEN: string = '#1FB81C';
 const YELLOW: string = '#FEEB00';
 const RED: string = '#FC4433';

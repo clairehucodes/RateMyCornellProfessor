@@ -45,6 +45,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const ratingPage: HTMLElement = document.createElement('html');
             ratingPage.innerHTML = pageText;
             const profRatingEle: any = ratingPage.getElementsByClassName('RatingValue__Numerator');
+            
             let profRating: HTMLElement;
             if (profRatingEle != null) {
               profRating = profRatingEle.textContent
