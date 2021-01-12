@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 console.log('++++++++');
                 console.log(profRatingEle);
                 var profRating;
-                if (profRatingEle != null) {
+                if (profRating != null) {
                     console.log('^^^^^^^^^^');
                     console.log(profRatingEle);
                     profRating = profRatingEle.textContent;

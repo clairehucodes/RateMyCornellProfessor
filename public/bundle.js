@@ -127,6 +127,7 @@ function getProfessorStrings() {
         var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
         console.log("##############");
         console.log(returnValHTML);
+        console.log(document.getElementsByClassName('instructors').item(i).querySelector('p').innerHTML);
         var returnVal = returnValHTML.getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);

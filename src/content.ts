@@ -77,11 +77,12 @@ function getProfessorStrings(): Array<string> {
     let returnValHTML: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
     console.log ("##############");
     console.log (returnValHTML);
+    console.log(document.getElementsByClassName('instructors').item(i).querySelector('p').innerHTML);
     let returnVal = returnValHTML.getAttribute('data-content');
     returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
     console.log(returnVal)
     returnStrings[i] = returnVal
-
+    
     //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
   }
   return returnStrings;
