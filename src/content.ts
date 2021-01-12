@@ -74,10 +74,28 @@ function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
   console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    let returnValHTML: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-    console.log ("##############");
-    console.log (returnValHTML);
-    let returnVal = returnValHTML.getAttribute('data-content');
+    let returnValHTML: any = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
+    let returnVal: string;
+    if (returnValHTML == null) {
+      console.log ("##############");
+      // console.log (document.getElementsByClassName('instructors').item(i))
+      // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p"))
+      // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p").item(1))
+      //returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName("p")[0].innerHTML;
+      returnVal = "Staff"
+    }
+    else{
+      console.log ("***********");
+      //console.log (returnValHTML.item(i).getElementsByTagName("p")[0]);
+      //console.log (returnValHTML.item(i).getElementsByTagName("p")[0].innerHTML);
+      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws'));
+      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0));
+      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content'));
+      //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
+      returnVal = returnValHTML.getAttribute('data-content');
+
+    }
+    
     returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
     console.log(returnVal)
     returnStrings[i] = returnVal

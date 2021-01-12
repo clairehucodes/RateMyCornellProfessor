@@ -125,9 +125,25 @@ function getProfessorStrings() {
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-        console.log("##############");
-        console.log(returnValHTML);
-        var returnVal = returnValHTML.getAttribute('data-content');
+        var returnVal = void 0;
+        if (returnValHTML == null) {
+            console.log("##############");
+            // console.log (document.getElementsByClassName('instructors').item(i))
+            // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p"))
+            // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p").item(1))
+            //returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName("p")[0].innerHTML;
+            returnVal = "Staff";
+        }
+        else {
+            console.log("***********");
+            //console.log (returnValHTML.item(i).getElementsByTagName("p")[0]);
+            //console.log (returnValHTML.item(i).getElementsByTagName("p")[0].innerHTML);
+            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws'));
+            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0));
+            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content'));
+            //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
+            returnVal = returnValHTML.getAttribute('data-content');
+        }
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);
         returnStrings[i] = returnVal;
