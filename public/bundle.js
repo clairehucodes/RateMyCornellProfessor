@@ -125,12 +125,6 @@ function getProfessorStrings() {
     console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-<<<<<<< HEAD
-        console.log("##############");
-        console.log(returnValHTML);
-        console.log(document.getElementsByClassName('instructors').item(i).querySelector('p').innerHTML);
-        var returnVal = returnValHTML.getAttribute('data-content');
-=======
         var returnVal = void 0;
         if (returnValHTML == null) {
             console.log("##############");
@@ -150,7 +144,6 @@ function getProfessorStrings() {
             //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
             returnVal = returnValHTML.getAttribute('data-content');
         }
->>>>>>> e540d60d93135434311907186236dce693a563c3
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);
         returnStrings[i] = returnVal;
