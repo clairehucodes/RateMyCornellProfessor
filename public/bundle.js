@@ -320,11 +320,7 @@ function setIsLoading(name) {
  * Adds the score and changes the color of the professor on the search page
  */
 function setScore(name, node, score) {
-<<<<<<< HEAD
     if (score > 0 || score < 5) {
-=======
-    if (score) {
->>>>>>> 403d1366b1eaeec01b105b51326da257ba9cc57c
         node.textContent = name + ' - ' + score;
         node.style.color = getColor(score);
     }
