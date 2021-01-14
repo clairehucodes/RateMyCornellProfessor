@@ -67,6 +67,7 @@ var area = document.getElementsByClassName('class-listing')[0];
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
+//const LOADING_INDICATOR: string = '<img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif">';
 //rateProfessorsOnPage;
 /**
  * Rates each of the professors currently in view.
@@ -126,8 +127,8 @@ function myDriver(myName, myNode) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 4, , 5]);
-                    if (!(isValidProfessor(myName) && isUnratedProfessor(myName))) return [3 /*break*/, 2];
                     setIsLoading(myNode);
+                    if (!(isValidProfessor(myName) && isUnratedProfessor(myName))) return [3 /*break*/, 2];
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
@@ -263,7 +264,9 @@ function getColor(rating) {
     if (rating < 2.5) {
         return RED;
     }
-    return YELLOW;
+    else {
+        return YELLOW;
+    }
 }
 /**
  * Given an array of elements, groups them by professor name and returns an object
@@ -302,14 +305,14 @@ function setInvalidScore(name, node) {
  * Appends the loading indicator next to professor names in the results list
  */
 function setIsLoading(name) {
-    name.innerHTML = name.innerHTML + ' - ';
+    name.innerHTML = name.innerHTML + ' - '; //+ LOADING_INDICATOR;
 }
 /**
  * Adds the score and changes the color of the professor on the search page
  */
 function setScore(name, node, score) {
-    if (score) {
-        node.textContent = name + ' - ' + score.toFixed(1);
+    if (score > 0 || score < 5) {
+        node.textContent = name + ' - ' + score;
         node.style.color = getColor(score);
     }
     else if (node == null) {

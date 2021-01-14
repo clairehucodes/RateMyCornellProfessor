@@ -24,6 +24,7 @@ let area = document.getElementsByClassName('class-listing')[0]
 const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProfessorsOnPage);
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true});
+//const LOADING_INDICATOR: string = '<img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif">';
 
 //rateProfessorsOnPage;
 /**
@@ -57,8 +58,9 @@ async function rateProfessorsOnPage() {
 
 async function myDriver(myName: string, myNode: HTMLElement) {
     try {
+      setIsLoading(myNode);
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
-        setIsLoading(myNode);
+        //setIsLoading(myNode);
         let score = await getProfessorId(myName).then(getOverallScore);
         console.log(score);
         myMap.set(myName, score);
@@ -191,7 +193,9 @@ function getColor(rating: number): string {
   if (rating < 2.5) {
     return RED;
   }
-  return YELLOW;
+  else{
+    return YELLOW;
+  }
 }
 
 /**
@@ -235,15 +239,15 @@ function setInvalidScore(name: string, node: HTMLElement) {
  * Appends the loading indicator next to professor names in the results list
  */
 function setIsLoading(name: HTMLElement) {
-  name.innerHTML = name.innerHTML + ' - ';
+  name.innerHTML = name.innerHTML + ' - '; //+ LOADING_INDICATOR;
 }
 
 /**
  * Adds the score and changes the color of the professor on the search page
  */
 function setScore(name: string, node: HTMLElement, score?: number) {
-  if (score) {
-    node.textContent = name + ' - ' + score.toFixed(1);
+  if (score > 0 || score < 5) {
+    node.textContent = name + ' - ' + score;
     node.style.color = getColor(score);
   } else if (node == null) {
     //do nothing
