@@ -20,7 +20,7 @@
 	],
 	"content_scripts": [
 		{
-			"matches": ["https://classes.cornell.edu/browse/roster/SP21/subject/*"],
+			"matches": ["https://classes.cornell.edu/browse/roster/SP21/*"],
 			"js": ["./public/bundle.js"],
 			"all_frames": true
 		}
