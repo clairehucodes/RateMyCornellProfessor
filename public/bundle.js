@@ -76,30 +76,23 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 250);
 function rateProfessorsOnPage() {
     var professorArray = getProfessorStrings();
+    myMap.set("hi", 5);
     for (var i = 0; i < professorArray.length; i++) {
-<<<<<<< HEAD
         var myHTMLColl = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
         for (var j = 0; j < myHTMLColl.length; j++) {
             var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
             var myName = professorArray[i + j];
-=======
-        var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-        var myName = professorArray[i];
-        console.log('*' + myName + '*');
-        console.log(myMap);
-        console.log((myMap.get(myName)));
-        myMap.set("hi", 5);
-        if (myMap.has("hi")) {
-            console.log("WORKED");
-        }
-        if (myMap.has(myName)) {
-            // @ts-ignore
-            setScore(myName, myNode, myMap.get(myName));
-        }
-        else {
->>>>>>> 131350978ce48eb8f1961c45d4c06578970aeac6
-            // @ts-ignore
-            myDriver(myName, myNode);
+            console.log('*' + myName + '*');
+            console.log(myMap);
+            console.log((myMap.has("hi")));
+            if (myMap.has(myName)) {
+                // @ts-ignore
+                setScore(myName, myNode, myMap.get(myName));
+            }
+            else {
+                // @ts-ignore
+                myDriver(myName, myNode);
+            }
         }
     }
 }
@@ -115,11 +108,7 @@ function myDriver(myName, myNode) {
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
-<<<<<<< HEAD
-=======
-                    // @ts-ignore
                     myMap.set(myName, score);
->>>>>>> 131350978ce48eb8f1961c45d4c06578970aeac6
                     setScore(myName, myNode, score);
                     console.log('setting score: ' + myName);
                     return [3 /*break*/, 3];
@@ -152,15 +141,10 @@ function getProfessorStrings() {
             returnVal = "Staff";
         }
         else {
-<<<<<<< HEAD
             var numProfs = document.getElementsByClassName('instructors').item(i).querySelectorAll('p').length;
             for (var j = 0; j < numProfs; j++) {
                 returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
             }
-=======
-            //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
-            returnVal = returnValHTML.getAttribute('data-content');
->>>>>>> 131350978ce48eb8f1961c45d4c06578970aeac6
         }
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);

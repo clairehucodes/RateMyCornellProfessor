@@ -16,7 +16,7 @@ const RED: string = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 //define map that holds prof name and scores
-let myMap = new Map()
+let myMap = new Map<string,any>()
 
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
@@ -34,29 +34,26 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 250);
 
 function rateProfessorsOnPage() {
-  const professorArray: Array<string> = getProfessorStrings()
+  const professorArray: Array<string> = getProfessorStrings();
 
+  myMap.set("hi", 5)
   for (let i: number = 0; i < professorArray.length; i++) {
     let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
     for (let j: number = 0; j < myHTMLColl.length; j++) {
       let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
       let myName: string = professorArray[i+j]
-    console.log('*' + myName + '*')
-    console.log(myMap);
-    console.log((myMap.get(myName)));
-    myMap.set("hi", 5)
-    if (myMap.has("hi")){
-      console.log("WORKED")
-    }
-    if (myMap.has(myName)){
-      // @ts-ignore
-      setScore(myName, myNode, myMap.get(myName));
-    } 
-    else {
-      // @ts-ignore
-      myDriver(myName, myNode);
+      console.log('*' + myName + '*')
+      console.log(myMap);
+      console.log((myMap.has("hi")));
+      if (myMap.has(myName)){
+        // @ts-ignore
+        setScore(myName, myNode, myMap.get(myName));
+      } 
+      else {
+        // @ts-ignore
+        myDriver(myName, myNode);
 
-    }
+      }
   }
 
 }
@@ -67,11 +64,9 @@ async function myDriver(myName: string, myNode: HTMLElement) {
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
         setIsLoading(myNode);
         const score = await getProfessorId(myName).then(getOverallScore);
-        // @ts-ignore
-        myMap.set(myName, score)
+        myMap.set(myName, score);
         setScore(myName, myNode, score);
         console.log('setting score: ' + myName)
-
       } else if (isUnratedProfessor(myName)) {
         setInvalidScore(myName, myNode);
       }
