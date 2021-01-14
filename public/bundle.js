@@ -56,10 +56,8 @@ var proxyurl = "http://www.datalakevision.com:8080/";
 var BASE_URL = proxyurl + 'https://www.ratemyprofessors.com';
 var BASE_SEARCH_URL = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 var GREEN = '#1FB81C';
-var YELLOW = '#FEEB00';
+var YELLOW = '#F4BC06';
 var RED = '#FC4433';
-// Use the same loading indicator that the page already does; don't host our own
-var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 //define map that holds prof name and scores
 var myMap = new Map();
 // @ts-ignore
@@ -73,28 +71,53 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 250);
+setTimeout(rateProfessorsOnPage, 800);
 function rateProfessorsOnPage() {
-    var professorArray = getProfessorStrings();
-    myMap.set("hi", 5);
-    for (var i = 0; i < professorArray.length; i++) {
-        var myHTMLColl = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
-        for (var j = 0; j < myHTMLColl.length; j++) {
-            var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
-            var myName = professorArray[i + j];
-            console.log('*' + myName + '*');
-            console.log(myMap);
-            console.log((myMap.has("hi")));
-            if (myMap.has(myName)) {
-                // @ts-ignore
-                setScore(myName, myNode, myMap.get(myName));
+    return __awaiter(this, void 0, void 0, function () {
+        var professorArray, numRow, i, myHTMLColl, j, myNode, myName;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    professorArray = getProfessorStrings();
+                    console.log(professorArray);
+                    numRow = 0;
+                    i = 0;
+                    _a.label = 1;
+                case 1:
+                    if (!(i < professorArray.length)) return [3 /*break*/, 8];
+                    myHTMLColl = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
+                    j = 0;
+                    _a.label = 2;
+                case 2:
+                    if (!(j < myHTMLColl.length)) return [3 /*break*/, 6];
+                    console.log("NUM: " + i);
+                    myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
+                    myName = professorArray[i];
+                    i = i + 1;
+                    if (!(myMap.get(myName) === undefined)) return [3 /*break*/, 4];
+                    // @ts-ignore
+                    return [4 /*yield*/, (myDriver(myName, myNode))];
+                case 3:
+                    // @ts-ignore
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    // @ts-ignore
+                    setScore(myName, myNode, myMap.get(myName));
+                    _a.label = 5;
+                case 5:
+                    j++;
+                    return [3 /*break*/, 2];
+                case 6:
+                    numRow++;
+                    _a.label = 7;
+                case 7:
+                    i;
+                    return [3 /*break*/, 1];
+                case 8: return [2 /*return*/];
             }
-            else {
-                // @ts-ignore
-                myDriver(myName, myNode);
-            }
-        }
-    }
+        });
+    });
 }
 function myDriver(myName, myNode) {
     return __awaiter(this, void 0, void 0, function () {
@@ -108,6 +131,7 @@ function myDriver(myName, myNode) {
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
+                    console.log(score);
                     myMap.set(myName, score);
                     setScore(myName, myNode, score);
                     console.log('setting score: ' + myName);
@@ -115,12 +139,14 @@ function myDriver(myName, myNode) {
                 case 2:
                     if (isUnratedProfessor(myName)) {
                         setInvalidScore(myName, myNode);
+                        myMap.set(myName, "N/A");
                     }
                     _b.label = 3;
                 case 3: return [3 /*break*/, 5];
                 case 4:
                     _a = _b.sent();
                     setInvalidScore(myName, myNode);
+                    myMap.set(myName, "N/A");
                     return [3 /*break*/, 5];
                 case 5:
                     ;
@@ -134,22 +160,27 @@ function myDriver(myName, myNode) {
  */
 function getProfessorStrings() {
     var returnStrings = [];
+    var rowNum = 0;
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-        var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
+        var returnValHTML = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
         var returnVal = void 0;
         if (returnValHTML == null) {
             returnVal = "Staff";
+            returnStrings[i] = returnVal;
         }
         else {
-            var numProfs = document.getElementsByClassName('instructors').item(i).querySelectorAll('p').length;
+            var numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length;
+            var counter = void 0;
             for (var j = 0; j < numProfs; j++) {
-                returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+                returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+                returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
+                console.log(i + j);
+                counter = i + j;
+                returnStrings[i + j] = returnVal;
             }
+            i = counter;
         }
-        returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-        console.log(returnVal);
-        returnStrings[i] = returnVal;
-        //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+        rowNum++;
     }
     return returnStrings;
 }
@@ -271,8 +302,7 @@ function setInvalidScore(name, node) {
  * Appends the loading indicator next to professor names in the results list
  */
 function setIsLoading(name) {
-    name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
-    //name = name + ' - ' + LOADING_INDICATOR;
+    name.innerHTML = name.innerHTML + ' - ';
 }
 /**
  * Adds the score and changes the color of the professor on the search page

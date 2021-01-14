@@ -11,10 +11,8 @@ const proxyurl = "http://www.datalakevision.com:8080/";
 const BASE_URL: string = proxyurl + 'https://www.ratemyprofessors.com';
 const BASE_SEARCH_URL: string = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 const GREEN: string = '#1FB81C';
-const YELLOW: string = '#FEEB00';
+const YELLOW: string = '#F4BC06';
 const RED: string = '#FC4433';
-// Use the same loading indicator that the page already does; don't host our own
-const LOADING_INDICATOR: string = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
 //define map that holds prof name and scores
 let myMap = new Map<string,any>()
 
@@ -31,31 +29,29 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 250);
+setTimeout(rateProfessorsOnPage, 800);
 
-function rateProfessorsOnPage() {
+async function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings();
-
-  myMap.set("hi", 5)
-  for (let i: number = 0; i < professorArray.length; i++) {
-    let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
+  console.log(professorArray)
+  let numRow: number = 0;
+  for (let i: number = 0; i < professorArray.length; i) {
+    let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
     for (let j: number = 0; j < myHTMLColl.length; j++) {
-      let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
-      let myName: string = professorArray[i+j]
-      console.log('*' + myName + '*')
-      console.log(myMap);
-      console.log((myMap.has("hi")));
-      if (myMap.has(myName)){
+      console.log("NUM: " + i);
+      let myNode: Element = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
+      let myName: string = professorArray[i]
+      i = i+1;
+      if (myMap.get(myName) === undefined){
         // @ts-ignore
-        setScore(myName, myNode, myMap.get(myName));
+        await(myDriver(myName, myNode));
       } 
       else {
         // @ts-ignore
-        myDriver(myName, myNode);
-
+        setScore(myName, myNode, myMap.get(myName));
       }
   }
-
+  numRow++;
 }
 }
 
@@ -63,16 +59,19 @@ async function myDriver(myName: string, myNode: HTMLElement) {
     try {
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
         setIsLoading(myNode);
-        const score = await getProfessorId(myName).then(getOverallScore);
+        let score = await getProfessorId(myName).then(getOverallScore);
+        console.log(score);
         myMap.set(myName, score);
         setScore(myName, myNode, score);
         console.log('setting score: ' + myName)
       } else if (isUnratedProfessor(myName)) {
         setInvalidScore(myName, myNode);
+        myMap.set(myName, "N/A");
       }
 
     } catch {
       setInvalidScore(myName, myNode);
+      myMap.set(myName, "N/A");
     };
   }
 
@@ -82,25 +81,27 @@ async function myDriver(myName: string, myNode: HTMLElement) {
  */
 function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
+  let rowNum: number = 0;
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    let returnValHTML: any = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
+    let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
     let returnVal: string;
     if (returnValHTML == null) {
-      returnVal = "Staff"
+      returnVal = "Staff";
+      returnStrings[i] = returnVal;
     }
-    else{
-      let numProfs = document.getElementsByClassName('instructors').item(i).querySelectorAll('p').length
+    else {
+      let numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
+      let counter: number;
       for (let j: number = 0; j < numProfs; j++) {
-        returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+        returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+        returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
+        console.log(i+j);
+        counter = i+j;
+        returnStrings[i+j] = returnVal;
       }
-
-    }
-    
-    returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
-    console.log(returnVal)
-    returnStrings[i] = returnVal
-    
-    //let returnVal: HTMLElement = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+      i = counter;
+    } 
+    rowNum++;
   }
   return returnStrings;
 }
@@ -234,8 +235,7 @@ function setInvalidScore(name: string, node: HTMLElement) {
  * Appends the loading indicator next to professor names in the results list
  */
 function setIsLoading(name: HTMLElement) {
-  name.innerHTML = name.innerHTML + ' - ' + LOADING_INDICATOR;
-  //name = name + ' - ' + LOADING_INDICATOR;
+  name.innerHTML = name.innerHTML + ' - ';
 }
 
 /**
