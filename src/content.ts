@@ -6,7 +6,8 @@
 //import { restricted } from './restricted';
 //import { subs } from './subs';
 
-const proxyurl = "https://cors-anywhere.herokuapp.com/";
+//const proxyurl = "https://cors-anywhere.herokuapp.com/";
+const proxyurl = "http://www.datalakevision.com:8080/";
 const BASE_URL: string = proxyurl + 'https://www.ratemyprofessors.com';
 const BASE_SEARCH_URL: string = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 const GREEN: string = '#1FB81C';
@@ -149,6 +150,7 @@ function getOverallScore(profId: string): Promise<number> {
     chrome.runtime.sendMessage(config, res => {
       if (res) {
         if (res.profRating) {
+          console.log("::::::::::::::::::::")
           if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
             console.log('------Professor not rated');
             reject('Professor not rated');

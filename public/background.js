@@ -8,8 +8,10 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var method = request.method ? request.method.toUpperCase() : 'GET';
     var headers = new Headers();
-    if (method === 'POST')
+    if (method === 'POST') {
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        //res.header("Access-Control-Allow-Headers", "x-requested-with, x-requested-by");
+    }
     var config = {
         method: method,
         headers: headers,
@@ -45,18 +47,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             });
             return true;
         case 'getOverallScore':
-            fetch(request.url, config)
+            fetch(request.url)
                 .then(function (res) { return res.text(); })
                 .then(function (pageText) {
                 console.log('"@@@@@@@@@@@@"');
                 console.log(pageText);
                 var ratingPage = document.createElement('html');
                 ratingPage.innerHTML = pageText;
-                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator');
+                var profRatingEle = ratingPage.getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0);
                 console.log('++++++++');
                 console.log(profRatingEle);
+                //console.log(ratingPage.getElementsByClassName('RatingValue__Numerator'))
                 var profRating;
-                if (profRating != null) {
+                if (profRatingEle != null) {
                     console.log('^^^^^^^^^^');
                     console.log(profRatingEle);
                     profRating = profRatingEle.textContent;
@@ -64,7 +67,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 }
                 else {
                     console.log('%%%%%%%%%%');
-                    console.log(profRatingEle);
                     console.debug('[ERROR: ratingPage.querySelector(div.grade) is null]');
                     sendResponse();
                 }

@@ -51,7 +51,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 //import { restricted } from './restricted';
 //import { subs } from './subs';
-var proxyurl = "https://cors-anywhere.herokuapp.com/";
+//const proxyurl = "https://cors-anywhere.herokuapp.com/";
+var proxyurl = "http://www.datalakevision.com:8080/";
 var BASE_URL = proxyurl + 'https://www.ratemyprofessors.com';
 var BASE_SEARCH_URL = 'https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=Cornell+University&schoolID=298&query=';
 var GREEN = '#1FB81C';
@@ -190,6 +191,7 @@ function getOverallScore(profId) {
         chrome.runtime.sendMessage(config, function (res) {
             if (res) {
                 if (res.profRating) {
+                    console.log("::::::::::::::::::::");
                     if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
                         console.log('------Professor not rated');
                         reject('Professor not rated');

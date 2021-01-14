@@ -2,7 +2,10 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const method: string = request.method ? request.method.toUpperCase() : 'GET';
     const headers: Headers = new Headers();
-    if (method === 'POST') headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    if (method === 'POST') {
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+      //res.header("Access-Control-Allow-Headers", "x-requested-with, x-requested-by");
+    }
     const config: RequestInit = {
       method: method,
       headers: headers,
@@ -42,18 +45,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
 
       case 'getOverallScore':
-        fetch(request.url, config)
+        fetch(request.url)
           .then(res => res.text())
           .then(pageText => {
             console.log('"@@@@@@@@@@@@"')
             console.log(pageText)
             const ratingPage: HTMLElement = document.createElement('html');
             ratingPage.innerHTML = pageText;
-            const profRatingEle: any = ratingPage.getElementsByClassName('RatingValue__Numerator');
+            const profRatingEle: any = ratingPage.getElementsByClassName('RatingValue__Numerator-qw8sqy-2 liyUjw').item(0)
             console.log('++++++++')
             console.log(profRatingEle)
+            //console.log(ratingPage.getElementsByClassName('RatingValue__Numerator'))
             let profRating: HTMLElement;
-            if (profRating != null) {
+            if (profRatingEle != null) {
               console.log('^^^^^^^^^^')
               console.log(profRatingEle)
               profRating = profRatingEle.textContent
@@ -61,7 +65,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
             else {
               console.log('%%%%%%%%%%')
-              console.log(profRatingEle)
               console.debug('[ERROR: ratingPage.querySelector(div.grade) is null]');
               sendResponse();
             }
