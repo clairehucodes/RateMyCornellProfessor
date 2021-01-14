@@ -36,7 +36,7 @@ function rateProfessorsOnPage() {
 
   for (let i: number = 0; i < professorArray.length; i++) {
     let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-    //let myNode: Element = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+    console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
     let myName: string = professorArray[i]
     // @ts-ignore
     myDriver(myName, myNode);
@@ -46,25 +46,17 @@ function rateProfessorsOnPage() {
 
 async function myDriver(myName: string, myNode: HTMLElement) {
     try {
-      console.log(myName + ": " + isValidProfessor(myName) + ", " + isUnratedProfessor(myName))
-
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
         setIsLoading(myNode);
         const score = await getProfessorId(myName).then(getOverallScore);
-        console.log("SCORE"+ score)
         setScore(myName, myNode, score);
       } else if (isUnratedProfessor(myName)) {
-        console.log("--rateProfessorsOnPage - unrated: " + myName)
         setInvalidScore(myName, myNode);
       }
 
     } catch {
       setInvalidScore(myName, myNode);
-      console.log("--rateProfessorsOnPage - catch: " + myName)
     };
-
-    console.log("--AFTER async")
-
   }
 
 
@@ -73,25 +65,14 @@ async function myDriver(myName: string, myNode: HTMLElement) {
  */
 function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
-  console.log(document.getElementsByClassName('instructors').length)
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
     let returnValHTML: any = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
     let returnVal: string;
     if (returnValHTML == null) {
-      console.log ("##############");
-      // console.log (document.getElementsByClassName('instructors').item(i))
-      // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p"))
-      // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p").item(1))
-      //returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName("p")[0].innerHTML;
       returnVal = "Staff"
     }
     else{
       console.log ("***********");
-      //console.log (returnValHTML.item(i).getElementsByTagName("p")[0]);
-      //console.log (returnValHTML.item(i).getElementsByTagName("p")[0].innerHTML);
-      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws'));
-      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0));
-      //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content'));
       //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
       returnVal = returnValHTML.getAttribute('data-content');
 
@@ -122,12 +103,9 @@ function getProfessorId(profName: string): Promise<string> {
 
     // @ts-ignore
     chrome.runtime.sendMessage(config, res => {
-      console.log("IN3!!")
       if (res.profId) {
-        console.log("getProfessorId worked!!" + res.profId)
         resolve(res.profId);
       } else {
-        console.log("getProfessorId DID NOT work!!")
         reject('Search result not found');
       }
     });
@@ -150,21 +128,16 @@ function getOverallScore(profId: string): Promise<number> {
     chrome.runtime.sendMessage(config, res => {
       if (res) {
         if (res.profRating) {
-          console.log("::::::::::::::::::::")
           if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
-            console.log('------Professor not rated');
             reject('Professor not rated');
           } else {
-            console.log('----------' + parseFloat(res.profRating))
             resolve(parseFloat(res.profRating));
           }
         } else {
-          console.log('--------No rating found');
           reject('No rating found');
         }
       }
       else{
-        console.log('--------No rating found!!!! :(((');
         reject('No rating found');
       }
     });
@@ -179,7 +152,6 @@ function getOverallScore(profId: string): Promise<number> {
 function convertName(original: string): string {
   let nameArr = original.split(" ");
   let nameURL = nameArr[0] + "+"+ nameArr[1]
-  console.log("CONVERT NAME: " + nameURL)
 
   return nameURL
 //   const regex = /\w+( )\w+/g;
@@ -187,7 +159,6 @@ function convertName(original: string): string {
 // //   if (temp[0].trim() in subs) {
 // //     temp[0] = subs[temp[0].trim()];
 // //   }
-//   console.log("CONVERT NAME - O" + encodeURIComponent(temp[0]))
 // return encodeURIComponent(original);
 }
 
@@ -257,7 +228,6 @@ function setScore(name: string, node: HTMLElement, score?: number) {
     node.textContent = name + ' - ' + score.toFixed(1);
     node.style.color = getColor(score);
   } else {
-    console.log ("ERROR:::::  " + name)
     node.innerHTML = name + ' - N/A';
   }
 }
