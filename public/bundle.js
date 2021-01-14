@@ -67,6 +67,7 @@ var area = document.getElementsByClassName('class-listing')[0];
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
+var dict = {};
 //rateProfessorsOnPage;
 /**
  * Rates each of the professors currently in view.
@@ -76,10 +77,19 @@ function rateProfessorsOnPage() {
     var professorArray = getProfessorStrings();
     for (var i = 0; i < professorArray.length; i++) {
         var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-        //let myNode: Element = document.getElementsByClassName('instructors').item(i).querySelector('tooltip-iws')
+        console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
         var myName = professorArray[i];
-        // @ts-ignore
-        myDriver(myName, myNode);
+        console.log('*' + myName + '*');
+        console.log(!(dict.hasOwnProperty(myName)));
+        console.log(dict);
+        if (!(dict.hasOwnProperty(myName))) {
+            // @ts-ignore
+            myDriver(myName, myNode);
+        }
+        else {
+            // @ts-ignore
+            setScore(myName, myNode, dict[myName]);
+        }
     }
 }
 function myDriver(myName, myNode) {
@@ -89,18 +99,17 @@ function myDriver(myName, myNode) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 4, , 5]);
-                    console.log(myName + ": " + isValidProfessor(myName) + ", " + isUnratedProfessor(myName));
                     if (!(isValidProfessor(myName) && isUnratedProfessor(myName))) return [3 /*break*/, 2];
                     setIsLoading(myNode);
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
-                    console.log("SCORE" + score);
+                    dict[myName] = score;
+                    console.log('setting score: ' + myName);
                     setScore(myName, myNode, score);
                     return [3 /*break*/, 3];
                 case 2:
                     if (isUnratedProfessor(myName)) {
-                        console.log("--rateProfessorsOnPage - unrated: " + myName);
                         setInvalidScore(myName, myNode);
                     }
                     _b.label = 3;
@@ -108,11 +117,9 @@ function myDriver(myName, myNode) {
                 case 4:
                     _a = _b.sent();
                     setInvalidScore(myName, myNode);
-                    console.log("--rateProfessorsOnPage - catch: " + myName);
                     return [3 /*break*/, 5];
                 case 5:
                     ;
-                    console.log("--AFTER async");
                     return [2 /*return*/];
             }
         });
@@ -123,25 +130,13 @@ function myDriver(myName, myNode) {
  */
 function getProfessorStrings() {
     var returnStrings = [];
-    console.log(document.getElementsByClassName('instructors').length);
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
         var returnValHTML = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
         var returnVal = void 0;
         if (returnValHTML == null) {
-            console.log("##############");
-            // console.log (document.getElementsByClassName('instructors').item(i))
-            // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p"))
-            // console.log (document.getElementsByClassName('instructors').item(i).getElementsByTagName("p").item(1))
-            //returnVal = document.getElementsByClassName('instructors').item(i).getElementsByTagName("p")[0].innerHTML;
             returnVal = "Staff";
         }
         else {
-            console.log("***********");
-            //console.log (returnValHTML.item(i).getElementsByTagName("p")[0]);
-            //console.log (returnValHTML.item(i).getElementsByTagName("p")[0].innerHTML);
-            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws'));
-            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0));
-            //console.log (returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content'));
             //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
             returnVal = returnValHTML.getAttribute('data-content');
         }
@@ -165,13 +160,10 @@ function getProfessorId(profName) {
     return new Promise(function (resolve, reject) {
         // @ts-ignore
         chrome.runtime.sendMessage(config, function (res) {
-            console.log("IN3!!");
             if (res.profId) {
-                console.log("getProfessorId worked!!" + res.profId);
                 resolve(res.profId);
             }
             else {
-                console.log("getProfessorId DID NOT work!!");
                 reject('Search result not found');
             }
         });
@@ -191,23 +183,18 @@ function getOverallScore(profId) {
         chrome.runtime.sendMessage(config, function (res) {
             if (res) {
                 if (res.profRating) {
-                    console.log("::::::::::::::::::::");
                     if (res.profRating === '0.0' || res.profRating.includes('Grade received')) {
-                        console.log('------Professor not rated');
                         reject('Professor not rated');
                     }
                     else {
-                        console.log('----------' + parseFloat(res.profRating));
                         resolve(parseFloat(res.profRating));
                     }
                 }
                 else {
-                    console.log('--------No rating found');
                     reject('No rating found');
                 }
             }
             else {
-                console.log('--------No rating found!!!! :(((');
                 reject('No rating found');
             }
         });
@@ -221,14 +208,12 @@ function getOverallScore(profId) {
 function convertName(original) {
     var nameArr = original.split(" ");
     var nameURL = nameArr[0] + "+" + nameArr[1];
-    console.log("CONVERT NAME: " + nameURL);
     return nameURL;
     //   const regex = /\w+( )\w+/g;
     //   const temp: RegExpExecArray = regex.exec(original)!;
     // //   if (temp[0].trim() in subs) {
     // //     temp[0] = subs[temp[0].trim()];
     // //   }
-    //   console.log("CONVERT NAME - O" + encodeURIComponent(temp[0]))
     // return encodeURIComponent(original);
 }
 /**
@@ -292,7 +277,6 @@ function setScore(name, node, score) {
         node.style.color = getColor(score);
     }
     else {
-        console.log("ERROR:::::  " + name);
         node.innerHTML = name + ' - N/A';
     }
 }

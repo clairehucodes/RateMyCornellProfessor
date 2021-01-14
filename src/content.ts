@@ -25,6 +25,7 @@ const getOverallScoresObserver: MutationObserver = new MutationObserver(rateProf
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true});
 
+let dict = {}
 //rateProfessorsOnPage;
 /**
  * Rates each of the professors currently in view.
@@ -38,8 +39,17 @@ function rateProfessorsOnPage() {
     let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
     console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
     let myName: string = professorArray[i]
-    // @ts-ignore
-    myDriver(myName, myNode);
+    console.log('*' + myName + '*')
+    console.log(!(dict.hasOwnProperty(myName)))
+    console.log(dict)
+    if (!(dict.hasOwnProperty(myName))){
+      // @ts-ignore
+      myDriver(myName, myNode);
+    } 
+    else {
+      // @ts-ignore
+      setScore(myName, myNode, dict[myName]);
+    }
   }
 
 }
@@ -49,6 +59,8 @@ async function myDriver(myName: string, myNode: HTMLElement) {
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
         setIsLoading(myNode);
         const score = await getProfessorId(myName).then(getOverallScore);
+        dict[myName] = score
+        console.log('setting score: ' + myName)
         setScore(myName, myNode, score);
       } else if (isUnratedProfessor(myName)) {
         setInvalidScore(myName, myNode);
@@ -72,7 +84,6 @@ function getProfessorStrings(): Array<string> {
       returnVal = "Staff"
     }
     else{
-      console.log ("***********");
       //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
       returnVal = returnValHTML.getAttribute('data-content');
 
@@ -122,7 +133,6 @@ function getOverallScore(profId: string): Promise<number> {
     method: 'POST',
     url: BASE_URL + profId,
   };
-
   return new Promise((resolve, reject) => {
     // @ts-ignore
     chrome.runtime.sendMessage(config, res => {
@@ -132,6 +142,7 @@ function getOverallScore(profId: string): Promise<number> {
             reject('Professor not rated');
           } else {
             resolve(parseFloat(res.profRating));
+
           }
         } else {
           reject('No rating found');
