@@ -71,15 +71,17 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 500);
+setTimeout(rateProfessorsOnPage, 250);
 function rateProfessorsOnPage() {
     var professorArray = getProfessorStrings();
     for (var i = 0; i < professorArray.length; i++) {
-        var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-        console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
-        var myName = professorArray[i];
-        // @ts-ignore
-        myDriver(myName, myNode);
+        var myHTMLColl = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
+        for (var j = 0; j < myHTMLColl.length; j++) {
+            var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
+            var myName = professorArray[i + j];
+            // @ts-ignore
+            myDriver(myName, myNode);
+        }
     }
 }
 function myDriver(myName, myNode) {
@@ -125,9 +127,10 @@ function getProfessorStrings() {
             returnVal = "Staff";
         }
         else {
-            console.log("***********");
-            //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
-            returnVal = returnValHTML.getAttribute('data-content');
+            var numProfs = document.getElementsByClassName('instructors').item(i).querySelectorAll('p').length;
+            for (var j = 0; j < numProfs; j++) {
+                returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+            }
         }
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
         console.log(returnVal);

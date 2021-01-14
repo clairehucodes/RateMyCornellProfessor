@@ -29,17 +29,21 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 /**
  * Rates each of the professors currently in view.
  */
-setTimeout(rateProfessorsOnPage, 500);
+setTimeout(rateProfessorsOnPage, 250);
 
 function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings()
 
   for (let i: number = 0; i < professorArray.length; i++) {
-    let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-    console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
-    let myName: string = professorArray[i]
-    // @ts-ignore
-    myDriver(myName, myNode);
+    let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws');
+    for (let j: number = 0; j < myHTMLColl.length; j++) {
+      let myNode: Element = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j);
+      let myName: string = professorArray[i+j]
+      // @ts-ignore
+      myDriver(myName, myNode);
+
+
+    }
   }
 
 }
@@ -72,9 +76,10 @@ function getProfessorStrings(): Array<string> {
       returnVal = "Staff"
     }
     else{
-      console.log ("***********");
-      //returnValHTML.item(i).getElementsByClassName('tooltip-iws').item(0).getAttribute('data-content');
-      returnVal = returnValHTML.getAttribute('data-content');
+      let numProfs = document.getElementsByClassName('instructors').item(i).querySelectorAll('p').length
+      for (let j: number = 0; j < numProfs; j++) {
+        returnVal = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
+      }
 
     }
     
