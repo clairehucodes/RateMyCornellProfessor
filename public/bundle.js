@@ -60,6 +60,8 @@ var YELLOW = '#FEEB00';
 var RED = '#FC4433';
 // Use the same loading indicator that the page already does; don't host our own
 var LOADING_INDICATOR = '<img src="https://i.pinimg.com/originals/a6/8f/b5/a68fb58aa1ace26b0008f5a5dbcebfd2.jpg">';
+//define map that holds prof name and scores
+var myMap = new Map();
 // @ts-ignore
 chrome.runtime.sendMessage({ action: 'showIcon' });
 var area = document.getElementsByClassName('class-listing')[0];
@@ -67,7 +69,6 @@ var area = document.getElementsByClassName('class-listing')[0];
 var getOverallScoresObserver = new MutationObserver(rateProfessorsOnPage);
 //$COURSE_LIST_AREAS.forEach(area => getOverallScoresObserver.observe(area, { childList: true }));
 getOverallScoresObserver.observe(document.getElementsByClassName('class-listing').item(0), { childList: true, attributes: true });
-var dict = {};
 //rateProfessorsOnPage;
 /**
  * Rates each of the professors currently in view.
@@ -77,18 +78,21 @@ function rateProfessorsOnPage() {
     var professorArray = getProfessorStrings();
     for (var i = 0; i < professorArray.length; i++) {
         var myNode = document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws').item(0);
-        console.log(document.getElementsByClassName('instructors').item(i).getElementsByClassName('tooltip-iws'));
         var myName = professorArray[i];
         console.log('*' + myName + '*');
-        console.log(!(dict.hasOwnProperty(myName)));
-        console.log(dict);
-        if (!(dict.hasOwnProperty(myName))) {
+        console.log(myMap);
+        console.log((myMap.get(myName)));
+        myMap.set("hi", 5);
+        if (myMap.has("hi")) {
+            console.log("WORKED");
+        }
+        if (myMap.has(myName)) {
             // @ts-ignore
-            myDriver(myName, myNode);
+            setScore(myName, myNode, myMap.get(myName));
         }
         else {
             // @ts-ignore
-            setScore(myName, myNode, dict[myName]);
+            myDriver(myName, myNode);
         }
     }
 }
@@ -104,9 +108,10 @@ function myDriver(myName, myNode) {
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
-                    dict[myName] = score;
-                    console.log('setting score: ' + myName);
+                    // @ts-ignore
+                    myMap.set(myName, score);
                     setScore(myName, myNode, score);
+                    console.log('setting score: ' + myName);
                     return [3 /*break*/, 3];
                 case 2:
                     if (isUnratedProfessor(myName)) {
