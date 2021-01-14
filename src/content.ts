@@ -227,7 +227,10 @@ function setScore(name: string, node: HTMLElement, score?: number) {
   if (score) {
     node.textContent = name + ' - ' + score.toFixed(1);
     node.style.color = getColor(score);
-  } else {
+  } else if (node == null) {
+    //do nothing
+  } 
+  else {
     node.innerHTML = name + ' - N/A';
   }
 }
