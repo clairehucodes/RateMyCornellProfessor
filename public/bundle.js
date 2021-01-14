@@ -74,47 +74,57 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 800);
 function rateProfessorsOnPage() {
     return __awaiter(this, void 0, void 0, function () {
-        var professorArray, numRow, i, myHTMLColl, j, myNode, myName;
+        var professorArray, numRow, i, myName, myNode, myHTMLColl, j;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     professorArray = getProfessorStrings();
-                    console.log(professorArray);
+                    console.log(document.getElementsByClassName('instructors'));
+                    myMap.set("Staff", "N/A");
                     numRow = 0;
                     i = 0;
                     _a.label = 1;
                 case 1:
-                    if (!(i < professorArray.length)) return [3 /*break*/, 8];
+                    if (!(i < professorArray.length)) return [3 /*break*/, 9];
+                    myName = professorArray[i];
+                    myNode = void 0;
+                    if (!(myName == "Staff")) return [3 /*break*/, 2];
+                    console.log("ALREADY THERE " + myName);
+                    myNode = document.getElementsByClassName('instructors').item(numRow);
+                    // @ts-ignore
+                    setInvalidScore(myName, myNode);
+                    i++;
+                    return [3 /*break*/, 7];
+                case 2:
                     myHTMLColl = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
                     j = 0;
-                    _a.label = 2;
-                case 2:
-                    if (!(j < myHTMLColl.length)) return [3 /*break*/, 6];
-                    console.log("NUM: " + i);
+                    _a.label = 3;
+                case 3:
+                    if (!(j < myHTMLColl.length)) return [3 /*break*/, 7];
                     myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
                     myName = professorArray[i];
                     i = i + 1;
-                    if (!(myMap.get(myName) === undefined)) return [3 /*break*/, 4];
+                    if (!(myMap.get(myName) === undefined)) return [3 /*break*/, 5];
                     // @ts-ignore
                     return [4 /*yield*/, (myDriver(myName, myNode))];
-                case 3:
-                    // @ts-ignore
-                    _a.sent();
-                    return [3 /*break*/, 5];
                 case 4:
                     // @ts-ignore
-                    setScore(myName, myNode, myMap.get(myName));
-                    _a.label = 5;
+                    _a.sent();
+                    return [3 /*break*/, 6];
                 case 5:
-                    j++;
-                    return [3 /*break*/, 2];
+                    // @ts-ignore
+                    setScore(myName, myNode, myMap.get(myName));
+                    _a.label = 6;
                 case 6:
-                    numRow++;
-                    _a.label = 7;
+                    j++;
+                    return [3 /*break*/, 3];
                 case 7:
+                    numRow++;
+                    _a.label = 8;
+                case 8:
                     i;
                     return [3 /*break*/, 1];
-                case 8: return [2 /*return*/];
+                case 9: return [2 /*return*/];
             }
         });
     });
@@ -131,7 +141,6 @@ function myDriver(myName, myNode) {
                     return [4 /*yield*/, getProfessorId(myName).then(getOverallScore)];
                 case 1:
                     score = _b.sent();
-                    console.log(score);
                     myMap.set(myName, score);
                     setScore(myName, myNode, score);
                     console.log('setting score: ' + myName);
@@ -309,7 +318,7 @@ function setIsLoading(name) {
  */
 function setScore(name, node, score) {
     if (score) {
-        node.textContent = name + ' - ' + score.toFixed(1);
+        node.textContent = name + ' - ' + score;
         node.style.color = getColor(score);
     }
     else if (node == null) {

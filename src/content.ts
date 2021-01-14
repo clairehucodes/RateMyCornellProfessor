@@ -33,34 +33,46 @@ setTimeout(rateProfessorsOnPage, 800);
 
 async function rateProfessorsOnPage() {
   const professorArray: Array<string> = getProfessorStrings();
-  console.log(professorArray)
+  console.log(document.getElementsByClassName('instructors'));
+  myMap.set("Staff", "N/A")
   let numRow: number = 0;
   for (let i: number = 0; i < professorArray.length; i) {
-    let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
-    for (let j: number = 0; j < myHTMLColl.length; j++) {
-      console.log("NUM: " + i);
-      let myNode: Element = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
-      let myName: string = professorArray[i]
-      i = i+1;
-      if (myMap.get(myName) === undefined){
-        // @ts-ignore
-        await(myDriver(myName, myNode));
-      } 
-      else {
-        // @ts-ignore
-        setScore(myName, myNode, myMap.get(myName));
+    let myName: string = professorArray[i];
+    let myNode: Element;
+    if  (myName == "Staff") {
+      console.log("ALREADY THERE " + myName);
+      myNode = document.getElementsByClassName('instructors').item(numRow);
+      // @ts-ignore
+      setInvalidScore(myName, myNode);
+      i++
+    }
+    else{
+      let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
+      for (let j: number = 0; j < myHTMLColl.length; j++) {
+        myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
+        myName = professorArray[i];
+        i = i+1;
+        if (myMap.get(myName) === undefined){
+          // @ts-ignore
+          await(myDriver(myName, myNode));
+        } 
+        else {
+          // @ts-ignore
+          setScore(myName, myNode, myMap.get(myName));
+          
+        }
       }
+    }
+    numRow++;
   }
-  numRow++;
 }
-}
+
 
 async function myDriver(myName: string, myNode: HTMLElement) {
     try {
       if (isValidProfessor(myName) && isUnratedProfessor(myName)) {
         setIsLoading(myNode);
         let score = await getProfessorId(myName).then(getOverallScore);
-        console.log(score);
         myMap.set(myName, score);
         setScore(myName, myNode, score);
         console.log('setting score: ' + myName)
@@ -243,7 +255,7 @@ function setIsLoading(name: HTMLElement) {
  */
 function setScore(name: string, node: HTMLElement, score?: number) {
   if (score) {
-    node.textContent = name + ' - ' + score.toFixed(1);
+    node.textContent = name + ' - ' + score;
     node.style.color = getColor(score);
   } else if (node == null) {
     //do nothing
