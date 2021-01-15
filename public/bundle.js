@@ -170,28 +170,31 @@ function myDriver(myName, myNode) {
  */
 function getProfessorStrings() {
     var returnStrings = [];
+    var counter = 0;
     var rowNum = 0;
+    var numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length;
     for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
-        var returnValHTML = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
-        var returnVal = void 0;
-        if (returnValHTML == null) {
-            returnVal = "Staff";
-            returnStrings[i] = returnVal;
-        }
-        else {
-            var numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length;
-            var counter = void 0;
-            for (var j = 0; j < numProfs; j++) {
+        for (var j = 0; j < numProfs; j++) {
+            var returnValHTML = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j);
+            var returnVal = void 0;
+            if (returnValHTML == null) {
+                returnVal = "Staff";
+                returnStrings[i] = returnVal;
+            }
+            else {
+                console.log('running else');
+                //for (let j: number = 0; j < numProfs; j++) {
                 returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
                 returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-                console.log(i + j);
-                counter = i + j;
-                returnStrings[i + j] = returnVal;
+                //  console.log(i+j);
+                returnStrings[rowNum + j] = returnVal;
+                //rowNum++
             }
-            i = counter;
+            //rowNum++;
         }
         rowNum++;
     }
+    console.log(returnStrings);
     return returnStrings;
 }
 /**
@@ -320,11 +323,7 @@ function setIsLoading(name) {
  * Adds the score and changes the color of the professor on the search page
  */
 function setScore(name, node, score) {
-<<<<<<< HEAD
     if (score > 0 || score < 5) {
-=======
-    if (score) {
->>>>>>> 403d1366b1eaeec01b105b51326da257ba9cc57c
         node.textContent = name + ' - ' + score;
         node.style.color = getColor(score);
     }

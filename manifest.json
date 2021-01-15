@@ -5,14 +5,14 @@
 	"description": "Puts RateMyProfessors ratings directly into Cornell Class Roster.",
 	"version": "1.0",
 	"icons": {
-		"16": "./img/icon16.png", 
-		"48": "./img/icon48.png", 
-		"128": "./img/icon128.png" 
+		"16": "./img/boldRMPlogo2bigger.png", 
+		"48": "./img/boldRMPlogo2bigger.png", 
+		"128": "./img/boldRMPlogo2bigger.png"
 	},
 	"page_action": {
 		"default_icon": {
-			"19": "./img/icon19.png", 
-			"38": "./img/icon38.png" 
+			"19": "./img/boldRMPlogo2bigger.png", 
+			"38": "./img/boldRMPlogo2bigger.png"
 		}
 	},
 	"permissions": [

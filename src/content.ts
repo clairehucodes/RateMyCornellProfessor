@@ -95,30 +95,35 @@ async function myDriver(myName: string, myNode: HTMLElement) {
  */
 function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
+  let counter: number = 0;
   let rowNum: number = 0;
+  let numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
   for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
-    let returnVal: string;
-    if (returnValHTML == null) {
-      returnVal = "Staff";
-      returnStrings[i] = returnVal;
-    }
-    else {
-      let numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
-      let counter: number;
-      for (let j: number = 0; j < numProfs; j++) {
+    for (let j: number = 0; j < numProfs; j++) {
+      let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j);
+      let returnVal: string;
+      if (returnValHTML == null) {
+        returnVal = "Staff";
+        returnStrings[i] = returnVal;
+      }
+      else {
+        console.log('running else');
+        //for (let j: number = 0; j < numProfs; j++) {
         returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
-        console.log(i+j);
-        counter = i+j;
-        returnStrings[i+j] = returnVal;
-      }
-      i = counter;
-    } 
-    rowNum++;
-  }
-  return returnStrings;
+         //  console.log(i+j);
+        returnStrings[rowNum + j] = returnVal;
+        //rowNum++
+       }
+      //rowNum++;
+      } 
+      rowNum++;
+    }
+    console.log(returnStrings)
+    return returnStrings;
 }
+
+
 
 /**
  * Gets the part of the URL that needs to be appended to the base URL to reach the professor's page
