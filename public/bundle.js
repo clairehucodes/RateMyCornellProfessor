@@ -80,9 +80,9 @@ function rateProfessorsOnPage() {
             switch (_a.label) {
                 case 0:
                     professorArray = getProfessorStrings();
+                    console.log(professorArray);
                     myMap.set("Staff", "N/A");
                     numRow = 0;
-                    console.log(professorArray);
                     i = 0;
                     _a.label = 1;
                 case 1:
@@ -90,7 +90,6 @@ function rateProfessorsOnPage() {
                     myName = professorArray[i];
                     myNode = void 0;
                     if (!(myName == "Staff")) return [3 /*break*/, 2];
-                    console.log(i);
                     myNode = document.getElementsByClassName('instructors').item(numRow);
                     // @ts-ignore
                     setInvalidScore(myName, myNode);
@@ -103,7 +102,6 @@ function rateProfessorsOnPage() {
                 case 3:
                     if (!(j < myHTMLColl.length)) return [3 /*break*/, 8];
                     myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
-                    console.log(i);
                     myName = professorArray[i];
                     if (!(myMap.get(myName) === undefined)) return [3 /*break*/, 5];
                     // @ts-ignore
@@ -172,30 +170,26 @@ function myDriver(myName, myNode) {
  */
 function getProfessorStrings() {
     var returnStrings = [];
-    var rowNum = 0;
-    for (var i = 0; i < document.getElementsByClassName('instructors').length; i++) {
+    var numProfs = 0;
+    for (var rowNum = 0; rowNum < document.getElementsByClassName('instructors').length; rowNum++) {
         var returnValHTML = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
         var returnVal = void 0;
         if (returnValHTML == null) {
             returnVal = "Staff";
-            returnStrings[i] = returnVal;
-            //console.log(i + ": " + returnVal);
+            returnStrings[numProfs] = returnVal;
         }
         else {
-            var numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length;
-            var counter = void 0;
-            for (var j = 0; j < numProfs; j++) {
+            var numProfsInRow = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length;
+            for (var j = 0; j < numProfsInRow; j++) {
                 returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
                 returnVal = returnVal.substring(0, returnVal.indexOf(" ("));
-                //console.log(i + ": " + returnVal);
-                returnStrings[i + j] = returnVal;
-                counter = i + j;
+                returnStrings[numProfs] = returnVal;
+                numProfs++;
             }
-            //i = counter;
+            numProfs--;
         }
-        rowNum++;
+        numProfs++;
     }
-    console.log(rowNum);
     return returnStrings;
 }
 /**

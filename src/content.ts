@@ -33,15 +33,14 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 800);
 
 async function rateProfessorsOnPage() {
-  const professorArray: Array<string> = getProfessorStrings();  
+  const professorArray: Array<string> = getProfessorStrings(); 
+  console.log(professorArray) 
   myMap.set("Staff", "N/A")
   let numRow: number = 0;
-  console.log(professorArray)
   for (let i: number = 0; i < professorArray.length; i) {
     let myName: string = professorArray[i];
     let myNode: Element;
     if  (myName == "Staff") {
-      console.log(i);
       myNode = document.getElementsByClassName('instructors').item(numRow);
       // @ts-ignore
       setInvalidScore(myName, myNode);
@@ -51,7 +50,6 @@ async function rateProfessorsOnPage() {
       let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
       for (let j: number = 0; j < myHTMLColl.length; j++) {
         myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
-        console.log(i);
         myName = professorArray[i];
         if (myMap.get(myName) === undefined){
           // @ts-ignore
@@ -60,6 +58,7 @@ async function rateProfessorsOnPage() {
         else {
           // @ts-ignore
           setScore(myName, myNode, myMap.get(myName));
+          
         }
         i++;
       }
@@ -94,30 +93,26 @@ async function myDriver(myName: string, myNode: HTMLElement) {
  */
 function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
-  let rowNum: number = 0;
-  for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
+  let numProfs: number = 0;
+  for (let rowNum: number = 0; rowNum < document.getElementsByClassName('instructors').length; rowNum++) {
     let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
     let returnVal: string;
     if (returnValHTML == null) {
       returnVal = "Staff";
-      returnStrings[i] = returnVal;
-      //console.log(i + ": " + returnVal);
+      returnStrings[numProfs] = returnVal;
     }
     else {
-      let numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
-      let counter: number;
-      for (let j: number = 0; j < numProfs; j++) {
+      let numProfsInRow = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
+      for (let j: number = 0; j < numProfsInRow; j++) {
         returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
-        //console.log(i + ": " + returnVal);
-        returnStrings[i+j] = returnVal;
-        counter = i+j;
+        returnStrings[numProfs] = returnVal;
+        numProfs++;
       }
-      //i = counter;
+      numProfs--;
     } 
-    rowNum++;
+    numProfs++;
   }
-  console.log(rowNum);
   return returnStrings;
 }
 
