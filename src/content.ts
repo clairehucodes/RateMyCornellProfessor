@@ -33,26 +33,24 @@ getOverallScoresObserver.observe(document.getElementsByClassName('class-listing'
 setTimeout(rateProfessorsOnPage, 800);
 
 async function rateProfessorsOnPage() {
-  const professorArray: Array<string> = getProfessorStrings();
-  console.log(document.getElementsByClassName('instructors'));
+  const professorArray: Array<string> = getProfessorStrings(); 
+  console.log(professorArray) 
   myMap.set("Staff", "N/A")
   let numRow: number = 0;
   for (let i: number = 0; i < professorArray.length; i) {
     let myName: string = professorArray[i];
     let myNode: Element;
     if  (myName == "Staff") {
-      console.log("ALREADY THERE " + myName);
       myNode = document.getElementsByClassName('instructors').item(numRow);
       // @ts-ignore
       setInvalidScore(myName, myNode);
-      i++
+      i++;
     }
     else{
       let myHTMLColl: HTMLCollection = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws');
       for (let j: number = 0; j < myHTMLColl.length; j++) {
         myNode = document.getElementsByClassName('instructors').item(numRow).getElementsByClassName('tooltip-iws').item(j);
         myName = professorArray[i];
-        i = i+1;
         if (myMap.get(myName) === undefined){
           // @ts-ignore
           await(myDriver(myName, myNode));
@@ -62,6 +60,7 @@ async function rateProfessorsOnPage() {
           setScore(myName, myNode, myMap.get(myName));
           
         }
+        i++;
       }
     }
     numRow++;
@@ -77,7 +76,6 @@ async function myDriver(myName: string, myNode: HTMLElement) {
         let score = await getProfessorId(myName).then(getOverallScore);
         myMap.set(myName, score);
         setScore(myName, myNode, score);
-        console.log('setting score: ' + myName)
       } else if (isUnratedProfessor(myName)) {
         setInvalidScore(myName, myNode);
         myMap.set(myName, "N/A");
@@ -95,32 +93,27 @@ async function myDriver(myName: string, myNode: HTMLElement) {
  */
 function getProfessorStrings(): Array<string> {
   let returnStrings: Array<string> = []
-  let counter: number = 0;
-  let rowNum: number = 0;
-  let numProfs = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
-  for (let i: number = 0; i < document.getElementsByClassName('instructors').length; i++) {
-    for (let j: number = 0; j < numProfs; j++) {
-      let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j);
-      let returnVal: string;
-      if (returnValHTML == null) {
-        returnVal = "Staff";
-        returnStrings[i] = returnVal;
-      }
-      else {
-        console.log('running else');
-        //for (let j: number = 0; j < numProfs; j++) {
+  let numProfs: number = 0;
+  for (let rowNum: number = 0; rowNum < document.getElementsByClassName('instructors').length; rowNum++) {
+    let returnValHTML: any = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(0);
+    let returnVal: string;
+    if (returnValHTML == null) {
+      returnVal = "Staff";
+      returnStrings[numProfs] = returnVal;
+    }
+    else {
+      let numProfsInRow = document.getElementsByClassName('instructors').item(rowNum).querySelectorAll('p').length
+      for (let j: number = 0; j < numProfsInRow; j++) {
         returnVal = document.getElementsByClassName('instructors').item(rowNum).getElementsByClassName('tooltip-iws').item(j).getAttribute('data-content');
         returnVal = returnVal.substring(0, returnVal.indexOf(" ("))
-         //  console.log(i+j);
-        returnStrings[rowNum + j] = returnVal;
-        //rowNum++
-       }
-      //rowNum++;
-      } 
-      rowNum++;
-    }
-    console.log(returnStrings)
-    return returnStrings;
+        returnStrings[numProfs] = returnVal;
+        numProfs++;
+      }
+      numProfs--;
+    } 
+    numProfs++;
+  }
+  return returnStrings;
 }
 
 
@@ -263,7 +256,7 @@ function setIsLoading(name: HTMLElement) {
  * Adds the score and changes the color of the professor on the search page
  */
 function setScore(name: string, node: HTMLElement, score?: number) {
-  if (score > 0 || score < 5) {
+  if (score > 0 && score <= 5) {
     node.textContent = name + ' - ' + score;
     node.style.color = getColor(score);
   } else if (node == null) {
