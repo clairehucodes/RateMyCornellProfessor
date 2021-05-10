@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3.0,
 	"name": "Rate My Cornell Professors",
 	"short_name": "CornellRMP",
 	"description": "Puts RateMyProfessors ratings directly into Cornell Class Roster.",
