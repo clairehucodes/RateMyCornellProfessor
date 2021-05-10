@@ -190,7 +190,6 @@ function getProfessorStrings() {
         }
         numProfs++;
     }
-    console.log(returnStrings);
     return returnStrings;
 }
 /**
