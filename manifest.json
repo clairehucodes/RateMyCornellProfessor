@@ -3,7 +3,7 @@
 	"name": "Rate My Cornell Professors",
 	"short_name": "CornellRMP",
 	"description": "Puts RateMyProfessors ratings directly into Cornell Class Roster.",
-	"version": "3.0",
+	"version": "2.0",
 	"icons": {
 		"16": "./img/boldRMPlogo2bigger.png", 
 		"48": "./img/boldRMPlogo2bigger.png", 
