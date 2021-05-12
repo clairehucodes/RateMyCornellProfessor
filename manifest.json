@@ -20,7 +20,7 @@
 	],
 	"content_scripts": [
 		{
-			"matches": ["https://classes.cornell.edu/browse/roster/*"],
+			"matches": ["https://classes.cornell.edu/browse/roster/*", "https://classes.cornell.edu/search/roster/*"],
 			"js": ["./public/bundle.js"],
 			"all_frames": true
 		}
